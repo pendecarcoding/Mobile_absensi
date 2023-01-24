@@ -1,6 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_session_manager/flutter_session_manager.dart';
 
+import '../../data/remote/response/Status.dart';
+import '../../view_model/login/LoginVM.dart';
 import '../home/home.dart';
 
 class login extends StatefulWidget {
@@ -15,121 +18,166 @@ class _login extends State<login> {
   bool? isChecked = false;
   LoginStatus _loginStatus = LoginStatus.notSignIn;
   String? nip, password;
+  final _key = new GlobalKey<FormState>();
+  final LoginVM viewModel = LoginVM();
+  check() {
+    /*Navigator.pushReplacement(
+        context, MaterialPageRoute(builder: (BuildContext context) => home()));
+    */
+    final form = _key.currentState;
+    if (form!.validate()) {
+      form.save();
+      login();
+    }
+  }
+
+  login() async {
+    await viewModel.actlogin(nip!, password!);
+    switch (viewModel.login.status) {
+      case Status.COMPLETED:
+        try {
+          viewModel.login.data!.data!.idUser;
+          savepref(viewModel.login.data!.data!.idUser);
+        } catch (_) {
+          // <-- removing the on Exception clause
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: const Text('Akun tidak tersedia'),
+            ),
+          );
+          throw Exception("Error on server");
+        }
+
+        break;
+      default:
+        break;
+    }
+  }
+
+  savepref(String? id) async {
+    await SessionManager().set("id", id).then((value) =>
+        Navigator.pushReplacement(context,
+            MaterialPageRoute(builder: (BuildContext context) => home())));
+  }
+
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    return Scaffold(
-        body: Container(
-      width: double.infinity,
-      height: double.infinity,
-      decoration: const BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [
-            Color.fromARGB(255, 246, 246, 246),
-            Color.fromARGB(255, 255, 255, 255),
-            Color.fromARGB(255, 255, 255, 255),
-            Color.fromARGB(255, 255, 255, 255),
-          ],
-        ),
-      ),
-      child: SingleChildScrollView(
-          child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20).copyWith(top: 60),
-        child: Column(
-          children: [
-            const Text(
-              'E-Absensi',
-              style: TextStyle(
-                  fontFamily: 'PT-Sans',
-                  fontSize: 30,
-                  fontWeight: FontWeight.bold,
-                  color: Color.fromARGB(255, 75, 75, 75)),
+    return Form(
+        key: _key,
+        child: Scaffold(
+            body: Container(
+          width: double.infinity,
+          height: double.infinity,
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [
+                Color.fromARGB(255, 246, 246, 246),
+                Color.fromARGB(255, 255, 255, 255),
+                Color.fromARGB(255, 255, 255, 255),
+                Color.fromARGB(255, 255, 255, 255),
+              ],
             ),
-            const SizedBox(
-              height: 20,
-            ),
-            Image.asset(
-              "assets/images/slider_1.png",
-              width: 190,
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            Container(
-              alignment: Alignment.centerLeft,
-              child: const Text(
-                'NIP ',
-                style: TextStyle(
-                  fontFamily: 'PT-Sans',
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: Color.fromARGB(255, 151, 150, 150),
+          ),
+          child: SingleChildScrollView(
+              child: Padding(
+            padding:
+                const EdgeInsets.symmetric(horizontal: 20).copyWith(top: 60),
+            child: Column(
+              children: [
+                const Text(
+                  'E-Absensi',
+                  style: TextStyle(
+                      fontFamily: 'PT-Sans',
+                      fontSize: 30,
+                      fontWeight: FontWeight.bold,
+                      color: Color.fromARGB(255, 75, 75, 75)),
                 ),
-              ),
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            _buildTextField(
-              hintText: 'NIP Pegawai',
-              obscureText: false,
-              validator: (e) {
-                if (e!.isEmpty) {
-                  return "NIP harus diisi";
-                }
-              },
-              onSaved: (e) => nip = e,
-              prefixedIcon: const Icon(Icons.mail, color: Colors.white),
-            ),
-            const SizedBox(
-              height: 30,
-            ),
-            Container(
-              alignment: Alignment.centerLeft,
-              child: const Text(
-                'Password',
-                style: TextStyle(
-                  fontFamily: 'PT-Sans',
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: Color.fromARGB(255, 75, 75, 75),
+                const SizedBox(
+                  height: 20,
                 ),
-              ),
+                Image.asset(
+                  "assets/images/slider_1.png",
+                  width: 190,
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                Container(
+                  alignment: Alignment.centerLeft,
+                  child: const Text(
+                    'NIP ',
+                    style: TextStyle(
+                      fontFamily: 'PT-Sans',
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: Color.fromARGB(255, 151, 150, 150),
+                    ),
+                  ),
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                _buildTextField(
+                  hintText: 'NIP Pegawai',
+                  obscureText: false,
+                  validator: (e) {
+                    if (e!.isEmpty) {
+                      return "NIP harus diisi";
+                    }
+                  },
+                  onSaved: (e) => nip = e,
+                  prefixedIcon: const Icon(Icons.mail, color: Colors.white),
+                ),
+                const SizedBox(
+                  height: 30,
+                ),
+                Container(
+                  alignment: Alignment.centerLeft,
+                  child: const Text(
+                    'Password',
+                    style: TextStyle(
+                      fontFamily: 'PT-Sans',
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: Color.fromARGB(255, 75, 75, 75),
+                    ),
+                  ),
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                _buildTextField(
+                  hintText: 'Enter your password',
+                  obscureText: true,
+                  validator: (e) {
+                    if (e!.isEmpty) {
+                      return "Password harus diisi";
+                    }
+                  },
+                  onSaved: (e) => password = e,
+                  prefixedIcon: const Icon(Icons.lock, color: Colors.white),
+                ),
+                const SizedBox(
+                  height: 15,
+                ),
+                _buildForgotPasswordButton(),
+                _buildRemeberMe(),
+                const SizedBox(
+                  height: 15,
+                ),
+                _buildLoginButton(onPressed: () {
+                  check();
+                }),
+                const SizedBox(
+                  height: 20,
+                ),
+              ],
             ),
-            const SizedBox(
-              height: 10,
-            ),
-            _buildTextField(
-              hintText: 'Enter your password',
-              obscureText: true,
-              validator: (e) {
-                if (e!.isEmpty) {
-                  return "Password harus diisi";
-                }
-              },
-              onSaved: (e) => password = e,
-              prefixedIcon: const Icon(Icons.lock, color: Colors.white),
-            ),
-            const SizedBox(
-              height: 15,
-            ),
-            _buildForgotPasswordButton(),
-            _buildRemeberMe(),
-            const SizedBox(
-              height: 15,
-            ),
-            _buildLoginButton(onPressed: () {
-              check();
-            }),
-            const SizedBox(
-              height: 20,
-            ),
-          ],
-        ),
-      )),
-    ));
+          )),
+        )));
   }
 
   Widget _buildForgotPasswordButton() {
@@ -242,8 +290,5 @@ class _login extends State<login> {
   }
 
   //check class
-  check() {
-    Navigator.pushReplacement(
-        context, MaterialPageRoute(builder: (BuildContext context) => home()));
-  }
+
 }

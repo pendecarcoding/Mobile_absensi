@@ -33,6 +33,15 @@ class Data {
   String? blokir;
   String? kodeUnitkerja;
   String? idBidang;
+  String? idPegawai;
+  int? id;
+  String? nip;
+  String? gd;
+  String? gb;
+  String? image;
+  String? status;
+  String? createdAt;
+  String? updatedAt;
 
   Data(
       {required this.idUser,
@@ -47,7 +56,16 @@ class Data {
       required this.alamat,
       required this.blokir,
       required this.kodeUnitkerja,
-      required this.idBidang});
+      required this.idBidang,
+      required this.idPegawai,
+      required this.id,
+      required this.nip,
+      required this.gd,
+      required this.gb,
+      required this.image,
+      required this.status,
+      required this.createdAt,
+      required this.updatedAt});
 
   Data.fromJson(Map<String, dynamic> json) {
     idUser = json['id_user'];
@@ -63,6 +81,15 @@ class Data {
     blokir = json['blokir'];
     kodeUnitkerja = json['kode_unitkerja'];
     idBidang = json['id_bidang'];
+    idPegawai = json['id_pegawai'];
+    id = json['id'];
+    nip = json['nip'];
+    gd = json['gd'];
+    gb = json['gb'];
+    image = json['image'];
+    status = json['status'];
+    createdAt = json['created_at'];
+    updatedAt = json['updated_at'];
   }
 
   Map<String, dynamic> toJson() {
@@ -80,6 +107,15 @@ class Data {
     data['blokir'] = this.blokir;
     data['kode_unitkerja'] = this.kodeUnitkerja;
     data['id_bidang'] = this.idBidang;
+    data['id_pegawai'] = this.idPegawai;
+    data['id'] = this.id;
+    data['nip'] = this.nip;
+    data['gd'] = this.gd;
+    data['gb'] = this.gb;
+    data['image'] = this.image;
+    data['status'] = this.status;
+    data['created_at'] = this.createdAt;
+    data['updated_at'] = this.updatedAt;
     return data;
   }
 }

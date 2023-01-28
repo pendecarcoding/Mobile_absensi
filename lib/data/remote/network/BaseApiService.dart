@@ -1,5 +1,5 @@
 abstract class BaseApiService {
-  final String baseUrl = "http://127.0.0.1:8000/api/absensiAPI/";
+  final String baseUrl = "https://absensi.bengkaliskab.go.id/api/absensiAPI/";
   //Untuk GET
   Future<dynamic> getResponse(String url);
 

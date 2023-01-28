@@ -13,7 +13,7 @@ class LoginRepolpm implements LoginRepo {
   @override
   Future<LoginModel?> LoginPost(email, password) async {
     try {
-      Map<String, String> data = {"email": email, "password": password};
+      Map<String, String> data = {"username": email, "password": password};
       dynamic response =
           await _apiService.postResponse(ApiEndPoints().Loginpost, data);
       //print("$response");

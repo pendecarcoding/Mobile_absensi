@@ -1,8 +1,19 @@
+import 'package:absensi/model/login/LoginModel.dart';
+import 'package:absensi/screens/datapegawai/datapegawai.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_session_manager/flutter_session_manager.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
+import '../../data/remote/response/Status.dart';
 import '../../theme/colors/light_colors.dart';
+import '../../view_model/PegawaiVM.dart';
+import '../../view_model/login/LoginVM.dart';
 import '../../widgets/home/task_column.dart';
 import '../../widgets/home/top_container.dart';
+import 'package:provider/provider.dart';
+
+import '../login/login.dart';
+import '../widget/LoadingWidget.dart';
+import '../widget/MyErrorWidget.dart';
 
 class home extends StatefulWidget {
   const home({Key? key}) : super(key: key);
@@ -13,45 +24,103 @@ class home extends StatefulWidget {
 }
 
 class _home extends State<home> {
+  final LoginVM viewModel = LoginVM();
+  final PegawaiVM viewpegawai = PegawaiVM();
+  String? nama = '';
+
+  get width => null;
+  @override
+  void initState() {
+    getdata();
+    super.initState();
+  }
+
+  getdata() async {
+    dynamic id = await SessionManager().get("id");
+    if (id != null) {
+      await viewModel.DetailAccount(id.toString()).then((value) async {
+        await viewpegawai.getdata(
+            id, viewModel.login.data!.data!.kodeUnitkerja!);
+      });
+    } else {
+      Navigator.pushReplacement(context,
+          MaterialPageRoute(builder: (BuildContext context) => login()));
+    }
+  }
+
+  Future<void> _dialoglogout(BuildContext context) {
+    return showDialog<void>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Apakah anda yakin akan keluar Aplikasi ?'),
+          content: const Text(
+              'Jika iya tekan YA jika tidak tekan TIDAK, Jika Logout anda harus login kembali jika akan menggunakan Aplikasi'),
+          actions: <Widget>[
+            TextButton(
+              style: TextButton.styleFrom(
+                textStyle: Theme.of(context).textTheme.labelLarge,
+              ),
+              child: const Text('Tidak'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              style: TextButton.styleFrom(
+                textStyle: Theme.of(context).textTheme.labelLarge,
+              ),
+              child: const Text('Ya'),
+              onPressed: () async {
+                await SessionManager().remove("id").then((value) =>
+                    Navigator.pushAndRemoveUntil(
+                        context,
+                        MaterialPageRoute(
+                            builder: (BuildContext context) => login()),
+                        ModalRoute.withName('/')));
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
     return Scaffold(
-        appBar: AppBar(
-          actions: <Widget>[
-            IconButton(
-              icon: Icon(Icons.logout),
-              onPressed: () {
-                //_dialoglogout(context);
-              },
-            )
-          ],
-          backgroundColor: LightColors.Blue,
-          title: Text("Aplikasi Absensi"),
-        ),
-        backgroundColor: Colors.white,
-        body: /*ChangeNotifierProvider<LoginVM>(
-        create: (BuildContext context) => viewModel,
-        child: 
-        Consumer<LoginVM>(builder: (context, viewModel, _) {
-          switch (viewModel.login.status) {
-            case Status.LOADING:
-              return LoadingWidget();
-            case Status.ERROR:
-              return MyErrorWidget(viewModel.login.message ?? "NA");
-            case Status.COMPLETED:
-              return getDataHome(viewModel.login.data!.data!);
-            default:
-          }
-          return Container();
-        })
+      appBar: AppBar(
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.logout),
+            onPressed: () {
+              _dialoglogout(context);
+            },
+          )
+        ],
+        backgroundColor: LightColors.Blue,
+        title: Text("Aplikasi Absensi"),
       ),
-    )*/
-
-            getDataHome());
+      backgroundColor: Colors.white,
+      body: ChangeNotifierProvider<LoginVM>(
+          create: (BuildContext context) => viewModel,
+          child: Consumer<LoginVM>(builder: (context, viewModel, _) {
+            switch (viewModel.login.status) {
+              case Status.LOADING:
+                return LoadingWidget();
+              case Status.ERROR:
+                return MyErrorWidget(viewModel.login.message ?? "NA");
+              case Status.COMPLETED:
+                return getDataHome(viewModel.login.data!.data!);
+              default:
+            }
+            return Container();
+          })),
+    );
   }
 
-  Widget getDataHome() {
+  Widget getDataHome(Data data) {
     return SafeArea(
       child: Column(
         children: <Widget>[
@@ -81,7 +150,10 @@ class _home extends State<home> {
                             backgroundColor: LightColors.kBlue,
                             radius: 35.0,
                             backgroundImage: NetworkImage(
-                                "https://jdih.bandungkab.go.id/asset/admin/dist/img/avatar04.png"),
+                                "https://absensi.bengkaliskab.go.id/pegawai/" +
+                                    data.kodeUnitkerja! +
+                                    "/" +
+                                    data.image!),
                           ),
                         ),
                         Column(
@@ -89,7 +161,7 @@ class _home extends State<home> {
                           children: <Widget>[
                             Container(
                               child: Text(
-                                "Bohati Mulyadi",
+                                data.nama!,
                                 textAlign: TextAlign.start,
                                 style: TextStyle(
                                   fontSize: 22.0,
@@ -162,7 +234,7 @@ class _home extends State<home> {
                         ),
                         SizedBox(height: 15.0),
                         TaskColumn(
-                          widget: home(),
+                          widget: datapegawai(pegawai: viewpegawai.data.data),
                           jenis: 'route',
                           url: '',
                           icon: Icons.account_box,

@@ -1,6 +1,8 @@
 import 'dart:async';
 
+import 'package:absensi/screens/login/login.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 
 import '../constants/constants.dart';
 import '../model/slider.dart';
@@ -88,7 +90,11 @@ class _SliderLayoutViewState extends State<SliderLayoutView> {
                         padding: EdgeInsets.only(left: 15.0, bottom: 15.0),
                         child: GestureDetector(
                           onTap: () {
-                            Navigator.pushNamed(context, 'login');
+                            Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (BuildContext context) =>
+                                        login()));
                           },
                           child: Text(
                             Constants.SKIP,

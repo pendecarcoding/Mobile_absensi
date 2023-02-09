@@ -1,12 +1,31 @@
 class LoginModel {
   String? message;
   Data? data;
-
-  LoginModel({required this.message, required this.data});
+  Kantor? kantor;
+  Jam? jam;
+  String? bisaabsen;
+  List<Listabsen>? listabsen;
+  LoginModel(
+      {required this.message,
+      required this.data,
+      required this.kantor,
+      this.jam,
+      required this.bisaabsen,
+      this.listabsen});
 
   LoginModel.fromJson(Map<String, dynamic> json) {
     message = json['message'];
     data = (json['data'] != null ? new Data.fromJson(json['data']) : null)!;
+    kantor =
+        json['kantor'] != null ? new Kantor.fromJson(json['kantor']) : null;
+    jam = (json['jam'] != null ? new Jam.fromJson(json['jam']) : null);
+    bisaabsen = json['bisaabsen'];
+    if (json['listabsen'] != null) {
+      listabsen = <Listabsen>[];
+      json['listabsen'].forEach((v) {
+        listabsen!.add(new Listabsen.fromJson(v));
+      });
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -14,6 +33,16 @@ class LoginModel {
     data['message'] = this.message;
     if (this.data != null) {
       data['data'] = this.data!.toJson();
+    }
+    if (this.kantor != null) {
+      data['kantor'] = this.kantor!.toJson();
+    }
+    if (this.jam != null) {
+      data['jam'] = this.jam!.toJson();
+    }
+    data['bisaabsen'] = this.bisaabsen;
+    if (this.listabsen != null) {
+      data['listabsen'] = this.listabsen!.map((v) => v.toJson()).toList();
     }
     return data;
   }
@@ -116,6 +145,137 @@ class Data {
     data['status'] = this.status;
     data['created_at'] = this.createdAt;
     data['updated_at'] = this.updatedAt;
+    return data;
+  }
+}
+
+class Kantor {
+  String? latitude;
+  String? longitude;
+  String? radius;
+  String? namaunitkerja;
+
+  Kantor({this.latitude, this.longitude, this.radius, this.namaunitkerja});
+
+  Kantor.fromJson(Map<String, dynamic> json) {
+    latitude = json['latitude'];
+    longitude = json['longitude'];
+    radius = json['radius'];
+    namaunitkerja = json['nama_unitkerja'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['latitude'] = this.latitude;
+    data['longitude'] = this.longitude;
+    data['radius'] = this.radius;
+    data['nama_unitkerja'] = this.namaunitkerja;
+    return data;
+  }
+}
+
+class Jam {
+  String? idJam;
+  String? hari;
+  String? kodeUnitkerja;
+  String? jenis;
+  String? jam;
+  String? batas;
+
+  Jam(
+      {this.idJam,
+      this.hari,
+      this.kodeUnitkerja,
+      this.jenis,
+      this.jam,
+      this.batas});
+
+  Jam.fromJson(Map<String, dynamic> json) {
+    idJam = json['id_jam'];
+    hari = json['hari'];
+    kodeUnitkerja = json['kode_unitkerja'];
+    jenis = json['jenis'];
+    jam = json['jam'];
+    batas = json['batas'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id_jam'] = this.idJam;
+    data['hari'] = this.hari;
+    data['kode_unitkerja'] = this.kodeUnitkerja;
+    data['jenis'] = this.jenis;
+    data['jam'] = this.jam;
+    data['batas'] = this.batas;
+    return data;
+  }
+}
+
+class Listabsen {
+  String? idAbsen;
+  String? idPegawai;
+  String? kodeUnitkerja;
+  String? status;
+  String? keterangan;
+  String? jenis;
+  String? latitude;
+  String? longitude;
+  String? swafoto;
+  String? tglabsen;
+  String? file;
+  String? noSurat;
+  String? time;
+  String? masaizin;
+
+  Listabsen(
+      {this.idAbsen,
+      this.idPegawai,
+      this.kodeUnitkerja,
+      this.status,
+      this.keterangan,
+      this.jenis,
+      this.latitude,
+      this.longitude,
+      this.swafoto,
+      this.tglabsen,
+      this.file,
+      this.noSurat,
+      this.time,
+      this.masaizin});
+
+  Listabsen.fromJson(Map<String, dynamic> json) {
+    idAbsen = json['id_absen'];
+    idPegawai = json['id_pegawai'];
+    kodeUnitkerja = json['kode_unitkerja'];
+    status = json['status'];
+    keterangan = json['keterangan'];
+    jenis = json['jenis'];
+    latitude = json['latitude'];
+    longitude = json['longitude'];
+    swafoto = json['swafoto'];
+    tglabsen = json['tglabsen'];
+    file = json['file'];
+    noSurat = json['no_surat'];
+    time = json['time'];
+    masaizin = json['masaizin'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id_absen'] = this.idAbsen;
+    data['id_pegawai'] = this.idPegawai;
+    data['kode_unitkerja'] = this.kodeUnitkerja;
+    data['status'] = this.status;
+    data['keterangan'] = this.keterangan;
+    data['jenis'] = this.jenis;
+    data['latitude'] = this.latitude;
+    data['longitude'] = this.longitude;
+    data['swafoto'] = this.swafoto;
+    data['tglabsen'] = this.tglabsen;
+    data['file'] = this.file;
+    data['no_surat'] = this.noSurat;
+    data['time'] = this.time;
+    data['masaizin'] = this.masaizin;
     return data;
   }
 }

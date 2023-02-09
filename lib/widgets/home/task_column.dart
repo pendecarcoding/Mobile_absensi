@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class TaskColumn extends StatelessWidget {
   final IconData icon;
@@ -67,7 +68,7 @@ class TaskColumn extends StatelessWidget {
 }
 
 Future<void> _launchUrl(url) async {
-  /*if (!await launchUrl(url)) {
+  if (!await launchUrl(url)) {
     throw 'Could not launch $url';
-  }*/
+  }
 }

@@ -37,6 +37,16 @@ dependencies:
   http: ^0.13.5
   flutter_session_manager: ^1.0.3
   provider: ^6.0.5
+  table_calendar: ^3.0.9
+  google_maps_flutter: ^2.2.3
+  geolocator: ^7.7.1
+  easy_geofencing: ^0.2.0
+  camera:
+  path_provider:
+  path:
+  image_picker: ^0.8.6+1
+  url_launcher: ^6.1.8
+  back_pressed: ^0.0.2
 
 dev_dependencies:
   flutter_test:

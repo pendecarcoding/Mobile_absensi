@@ -3,8 +3,7 @@ class ApiEndPoints {
   final String Loginpost = "login";
   final String getaccount = "getdatabyId";
   final String gethealth = "gethealth";
-  final String gethafalan = "gethafalan";
-  final String getinfospp = "getinfospp";
   final String updateaccount = "updateaccount";
+  final String addabsen = "addabsen";
   final String getemployee = "getemployee";
 }

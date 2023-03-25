@@ -13,6 +13,7 @@ class LightColors {
   static const Color kBlue = Color(0xFF6488E4);
   static const Color kLightGreen = Color(0xFFD9E6DC);
   static const Color kGreen = Color(0xFF309397);
+  static const Color primary = Color.fromARGB(255, 6, 57, 69);
 
   static const Color kDarkBlue = Color(0xFF0D253F);
 }

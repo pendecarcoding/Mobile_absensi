@@ -125,6 +125,30 @@ class _ambilabsen extends State<ambilabsen> {
     );
   }
 
+  _dialognotonradius(BuildContext context) {
+    return showDialog<void>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('PERHATIAN !!!'),
+          content: const Text(
+              'Saat ini anda di luar dari area Absensi !!! untuk melakukan absensi pastikan anda masuk dalam radius kantor'),
+          actions: <Widget>[
+            TextButton(
+              style: TextButton.styleFrom(
+                textStyle: Theme.of(context).textTheme.labelLarge,
+              ),
+              child: const Text('Close'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   void initState() {
     getdata();
@@ -137,7 +161,6 @@ class _ambilabsen extends State<ambilabsen> {
     if (id != null) {
       await viewModel.DetailAccount(id.toString());
       // print(viewpegawai.data.data!.data!.first.nama!);
-
     } else {
       Navigator.pushReplacement(context,
           MaterialPageRoute(builder: (BuildContext context) => login()));
@@ -228,9 +251,7 @@ class _ambilabsen extends State<ambilabsen> {
             },
             child: Scaffold(
               appBar: AppBar(
-                centerTitle: false,
                 title: Text("Ambil Absen"),
-                backgroundColor: LightColors.Blue,
               ),
               body: ChangeNotifierProvider<LoginVM>(
                   create: (BuildContext context) => viewModel,
@@ -326,8 +347,10 @@ class _ambilabsen extends State<ambilabsen> {
     String namaunitkerja = kantor.namaunitkerja.toString();
     if (jam.jenis == "Jam Masuk") {
       jenis = 'M';
+      print("Jenis Absen :" + jenis);
     } else {
       jenis = 'P';
+      print("Jenis Absen :" + jenis);
     }
     Set<Circle> circles = Set.from([
       Circle(
@@ -374,7 +397,7 @@ class _ambilabsen extends State<ambilabsen> {
           left: 0,
           child: Container(
             padding: EdgeInsets.all(12),
-            margin: EdgeInsets.only(top: 10, bottom: 10, left: 20, right: 20),
+            margin: EdgeInsets.only(top: 10, bottom: 7, left: 20, right: 60),
             decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(100),
@@ -442,9 +465,7 @@ class _ambilabsen extends State<ambilabsen> {
                           _dialogtake(context);
                         } else {
                           //ambilabsen();
-                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                            content: Text("Anda diluar Radius Absensi"),
-                          ));
+                          _dialognotonradius(context);
                         }
                       },
                     ),

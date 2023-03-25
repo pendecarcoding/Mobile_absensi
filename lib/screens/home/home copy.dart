@@ -15,7 +15,6 @@ import 'package:provider/provider.dart';
 
 import '../cuti/cuti.dart';
 import '../login/login.dart';
-import '../profil/profil.dart';
 import '../widget/LoadingWidget.dart';
 import '../widget/MyErrorWidget.dart';
 
@@ -96,24 +95,9 @@ class _home extends State<home> {
     double width = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: AppBar(
-          backgroundColor: LightColors.primary,
-          elevation: 0,
-          actions: <Widget>[
-            IconButton(
-              icon: const Icon(Icons.message),
-              tooltip: 'Message',
-              onPressed: () {
-                _dialoglogout(context);
-              },
-            ),
-            IconButton(
-              icon: const Icon(Icons.logout),
-              tooltip: 'Logout',
-              onPressed: () {
-                _dialoglogout(context);
-              },
-            ),
-          ]),
+        backgroundColor: LightColors.primary,
+        elevation: 0,
+      ),
       backgroundColor: Colors.white,
       body: ChangeNotifierProvider<LoginVM>(
           create: (BuildContext context) => viewModel,
@@ -248,19 +232,21 @@ class _home extends State<home> {
                 child: Column(children: [
                   Container(
                     padding: EdgeInsets.all(5),
-                    decoration:
-                        BoxDecoration(borderRadius: BorderRadius.circular(10)),
+                    decoration: BoxDecoration(
+                        color: LightColors.primary,
+                        borderRadius: BorderRadius.circular(10)),
                     width: MediaQuery.of(context).size.width,
                     child: Center(
                         child: Text(
                       "Rabu , 23 januari 2023",
                       style: TextStyle(
-                          fontSize: 17,
+                          fontSize: 20,
                           fontWeight: FontWeight.bold,
-                          color: Color.fromARGB(255, 96, 96, 96)),
+                          color: Colors.white),
                     )),
                   ),
-                  IntrinsicHeight(
+                  Container(
+                    margin: EdgeInsets.all(10),
                     child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
@@ -270,26 +256,18 @@ class _home extends State<home> {
                                 Center(
                                   child: Text("07:30",
                                       style: TextStyle(
-                                          fontSize: 30,
+                                          fontSize: 20,
                                           fontWeight: FontWeight.bold)),
                                 ),
                                 Center(
                                   child: Text(
                                     "JAM MASUK",
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.grey),
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.bold),
                                   ),
                                 )
                               ],
                             ),
-                          ),
-                          VerticalDivider(
-                            color: LightColors.kRed, //color of divider
-                            width: 10, //width space of divider
-                            thickness: 3, //thickness of divier line
-                            indent: 10, //Spacing at the top of divider.
-                            endIndent: 10, //Spacing at the bottom of divider.
                           ),
                           Container(
                             child: Column(
@@ -297,14 +275,13 @@ class _home extends State<home> {
                                 Center(
                                   child: Text("05:30",
                                       style: TextStyle(
-                                          fontSize: 30,
+                                          fontSize: 20,
                                           fontWeight: FontWeight.bold)),
                                 ),
                                 Center(
                                   child: Text("JAM PULANG",
                                       style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          color: Colors.grey)),
+                                          fontWeight: FontWeight.bold)),
                                 )
                               ],
                             ),
@@ -368,17 +345,6 @@ class _home extends State<home> {
                 title: 'Data Pegawai',
                 subtitle: 'lihat daftar Pegawai Kantor',
               ),
-              SizedBox(height: 15.0),
-              TaskColumn(
-                widget: datapegawai(
-                    kodeunitkerja: viewModel.login.data!.data!.kodeUnitkerja!),
-                jenis: 'route',
-                url: '',
-                icon: Icons.pie_chart,
-                iconBackgroundColor: LightColors.kRed,
-                title: 'Persentase Kehadiran',
-                subtitle: 'lihat persentase kehadiran anda',
-              ),
             ],
           ),
         ),
@@ -389,46 +355,84 @@ class _home extends State<home> {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              subheading('Fitur Absen'),
+              subheading('Daftar Hadir'),
               SizedBox(height: 5.0),
-              Card(
-                child: ListTile(
-                  trailing: Icon(
-                    Icons.arrow_forward_ios,
-                    color: LightColors.kRed,
-                  ),
-                  leading: CircleAvatar(
-                    radius: 20.0,
-                    backgroundColor: LightColors.primary,
-                    child: Icon(
-                      Icons.calendar_month,
-                      size: 15.0,
-                      color: Colors.white,
-                    ),
-                  ),
-                  title: Text("Pengajuan Cuti"),
-                  subtitle: Text("untuk pengurusan cuti pegawai"),
-                ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  GestureDetector(
+                      onTap: () => Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => cuti()),
+                          ),
+                      child: Container(
+                        child: Card(
+                            shape: RoundedRectangleBorder(
+                              side: BorderSide(color: Colors.white70, width: 1),
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            elevation: 1,
+                            shadowColor: Colors.black,
+                            color: Color.fromARGB(255, 1, 115, 222),
+                            child: SizedBox(
+                                width: 150,
+                                height: 150,
+                                child: Padding(
+                                    padding: const EdgeInsets.all(20.0),
+                                    child: Column(children: [
+                                      Icon(
+                                        Icons.file_open,
+                                        size: 50,
+                                        color: Colors.white,
+                                      ),
+                                      SizedBox(
+                                        height: 10,
+                                      ),
+                                      Text("Ambil Cuti",
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                              fontSize: 15,
+                                              color: Colors.white)),
+                                    ])))),
+                      )),
+                  GestureDetector(
+                      onTap: () => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => ambilabsen()),
+                          ),
+                      child: Container(
+                        child: Card(
+                            shape: RoundedRectangleBorder(
+                              side: BorderSide(color: Colors.white70, width: 1),
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            elevation: 1,
+                            shadowColor: Colors.black,
+                            color: Color.fromARGB(255, 222, 1, 97),
+                            child: SizedBox(
+                                width: 150,
+                                height: 150,
+                                child: Padding(
+                                    padding: const EdgeInsets.all(20.0),
+                                    child: Column(children: [
+                                      Icon(
+                                        Icons.map,
+                                        size: 50,
+                                        color: Colors.white,
+                                      ),
+                                      SizedBox(
+                                        height: 10,
+                                      ),
+                                      Text("Ambil Absen",
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                              fontSize: 15,
+                                              color: Colors.white)),
+                                    ])))),
+                      ))
+                ],
               ),
-              Card(
-                child: ListTile(
-                  trailing: Icon(
-                    Icons.arrow_forward_ios,
-                    color: LightColors.kRed,
-                  ),
-                  leading: CircleAvatar(
-                    radius: 20.0,
-                    backgroundColor: LightColors.primary,
-                    child: Icon(
-                      Icons.face_rounded,
-                      size: 15.0,
-                      color: Colors.white,
-                    ),
-                  ),
-                  title: Text("Ambil Absen"),
-                  subtitle: Text("fitur untuk melakukan absensi"),
-                ),
-              )
             ],
           ),
         ),
@@ -439,12 +443,12 @@ class _home extends State<home> {
   GestureDetector calendarIcon() {
     return GestureDetector(
       onTap: () async {
-        await Navigator.push(
+        /*await Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => profil(),
+            builder: (context) => pengaturan(),
           ),
-        ).whenComplete(() => {getdata()});
+        ).whenComplete(() => {getdata()});*/
       },
       child: CircleAvatar(
         radius: 25.0,

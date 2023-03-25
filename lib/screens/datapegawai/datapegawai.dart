@@ -52,18 +52,16 @@ class _datapegawai extends State<datapegawai> {
         appBar: AppBar(
           elevation: 0.3,
           iconTheme: IconThemeData(
-            color: Colors.black, //change your color here
+            color: Colors.white, //change your color here
           ),
           actions: [IconButton(onPressed: (() {}), icon: Icon(Icons.search))],
           centerTitle: true,
           title: Text(
             "Data pegawai",
             style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 20,
-                color: Color.fromARGB(255, 42, 42, 42)),
+                fontWeight: FontWeight.bold, fontSize: 20, color: Colors.white),
           ),
-          backgroundColor: Color.fromARGB(255, 255, 255, 255),
+          backgroundColor: LightColors.primary,
         ),
         body: ChangeNotifierProvider<PegawaiVM>(
             create: (BuildContext context) => viewpegawai,

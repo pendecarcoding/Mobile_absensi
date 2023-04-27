@@ -1,3 +1,4 @@
+import 'package:absensi/theme/colors/light_colors.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_session_manager/flutter_session_manager.dart';
@@ -229,7 +230,7 @@ class _login extends State<login> {
       child: ElevatedButton(
         style: ButtonStyle(
           backgroundColor: MaterialStateProperty.all(
-            Color.fromARGB(255, 9, 164, 64),
+            LightColors.primary,
           ),
           elevation: MaterialStateProperty.all(6),
           shape: MaterialStateProperty.all(
@@ -290,5 +291,4 @@ class _login extends State<login> {
   }
 
   //check class
-
 }

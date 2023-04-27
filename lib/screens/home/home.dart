@@ -130,8 +130,8 @@ class _home extends State<home> {
                 }
 
               case Status.COMPLETED:
-                return getDataHome(
-                    viewModel.login.data!.data!, viewModel.login.data!.kantor!);
+                return getDataHome(viewModel.login.data!.data!,
+                    viewModel.login.data!.kantor!, viewModel.login.data!.jam!);
               default:
             }
             return Container();
@@ -139,7 +139,7 @@ class _home extends State<home> {
     );
   }
 
-  Widget getDataHome(Data data, Kantor kantor) {
+  Widget getDataHome(Data data, Kantor kantor, Jam jam) {
     return Container(
         child: Column(
       children: <Widget>[
@@ -268,7 +268,7 @@ class _home extends State<home> {
                             child: Column(
                               children: [
                                 Center(
-                                  child: Text("07:30",
+                                  child: Text(jam.jam!,
                                       style: TextStyle(
                                           fontSize: 30,
                                           fontWeight: FontWeight.bold)),
@@ -295,7 +295,7 @@ class _home extends State<home> {
                             child: Column(
                               children: [
                                 Center(
-                                  child: Text("05:30",
+                                  child: Text(jam.batas!,
                                       style: TextStyle(
                                           fontSize: 30,
                                           fontWeight: FontWeight.bold)),

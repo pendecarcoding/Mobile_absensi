@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
 
-class TextFieldWidget extends StatefulWidget {
+class PassFieldWidget extends StatefulWidget {
   final int maxLines;
   final String label;
   final String text;
   final ValueChanged<String> onChanged;
   final String? Function(dynamic) validator;
   final void Function(dynamic) onSaved;
-  final TextInputType keyboardType;
 
-  const TextFieldWidget({
+  const PassFieldWidget({
     Key? key,
     this.maxLines = 1,
     required this.label,
@@ -17,14 +16,13 @@ class TextFieldWidget extends StatefulWidget {
     required this.onChanged,
     required this.validator,
     required this.onSaved,
-    required this.keyboardType,
   }) : super(key: key);
 
   @override
-  _TextFieldWidgetState createState() => _TextFieldWidgetState();
+  _PassFieldWidgetState createState() => _PassFieldWidgetState();
 }
 
-class _TextFieldWidgetState extends State<TextFieldWidget> {
+class _PassFieldWidgetState extends State<PassFieldWidget> {
   late final TextEditingController controller;
 
   @override
@@ -51,8 +49,8 @@ class _TextFieldWidgetState extends State<TextFieldWidget> {
           ),
           const SizedBox(height: 8),
           TextFormField(
+            obscureText: true,
             controller: controller,
-            keyboardType: widget.keyboardType,
             validator: widget.validator,
             onSaved: widget.onSaved,
             decoration: InputDecoration(

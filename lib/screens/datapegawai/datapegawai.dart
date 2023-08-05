@@ -24,7 +24,6 @@ class datapegawai extends StatefulWidget {
 }
 
 class _datapegawai extends State<datapegawai> {
-  final LoginVM viewModel = LoginVM();
   final PegawaiVM viewpegawai = PegawaiVM();
 
   @override
@@ -73,6 +72,7 @@ class _datapegawai extends State<datapegawai> {
                   return MyErrorWidget(viewpegawai.data.message ?? "NA");
                 case Status.COMPLETED:
                   return _widgetbody(viewpegawai.data.data!.data!);
+
                 default:
               }
               return Container();

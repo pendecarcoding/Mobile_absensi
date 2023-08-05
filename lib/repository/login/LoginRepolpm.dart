@@ -1,5 +1,7 @@
 import 'dart:ffi';
 
+import 'package:absensi/model/message/MessageModel.dart';
+
 import '../../data/remote/network/ApiEndPoints.dart';
 import '../../data/remote/network/BaseApiService.dart';
 import '../../data/remote/network/NetworkApiService.dart';
@@ -42,13 +44,27 @@ class LoginRepolpm implements LoginRepo {
   }
 
   @override
-  Future<LoginModel?> UpdateAccount(Map<String, String> array) async {
+  Future<MessageModel?> UpdateAccount(Map<String, String> array) async {
     try {
       Map<String, String> data = array;
       dynamic response =
           await _apiService.postResponse(ApiEndPoints().updateaccount, data);
       //print("$response");
-      final jsonData = LoginModel.fromJson(response);
+      final jsonData = MessageModel.fromJson(response);
+      return jsonData;
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  @override
+  Future<MessageModel?> Updatepassword(Map<String, String> array) async {
+    try {
+      Map<String, String> data = array;
+      dynamic response =
+          await _apiService.postResponse(ApiEndPoints().updatesandi, data);
+      //print("$response");
+      final jsonData = MessageModel.fromJson(response);
       return jsonData;
     } catch (e) {
       throw e;

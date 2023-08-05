@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:absensi/model/login/LoginModel.dart';
 import 'package:absensi/screens/absensi/ambilabsen.dart';
 import 'package:absensi/screens/datapegawai/datapegawai.dart';
@@ -12,7 +14,9 @@ import '../../view_model/login/LoginVM.dart';
 import '../../widgets/home/task_column.dart';
 import '../../widgets/home/top_container.dart';
 import 'package:provider/provider.dart';
-
+import 'package:intl/intl.dart';
+import 'package:intl/date_symbol_data_local.dart';
+import '../bantuan/bantuan.dart';
 import '../cuti/cuti.dart';
 import '../login/login.dart';
 import '../profil/profil.dart';
@@ -30,12 +34,17 @@ class home extends StatefulWidget {
 class _home extends State<home> {
   final LoginVM viewModel = LoginVM();
   final PegawaiVM viewpegawai = PegawaiVM();
+  late DateFormat dateFormat;
+  Timer? timer;
   String? nama = '';
 
   get width => null;
   @override
   void initState() {
+    initializeDateFormatting();
+    dateFormat = new DateFormat('EEEE, d MMMM yyyy', 'id');
     getdata();
+    timer?.cancel();
     super.initState();
   }
 
@@ -103,7 +112,10 @@ class _home extends State<home> {
               icon: const Icon(Icons.message),
               tooltip: 'Message',
               onPressed: () {
-                _dialoglogout(context);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => bantuan()),
+                );
               },
             ),
             IconButton(
@@ -130,8 +142,11 @@ class _home extends State<home> {
                 }
 
               case Status.COMPLETED:
-                return getDataHome(viewModel.login.data!.data!,
-                    viewModel.login.data!.kantor!, viewModel.login.data!.jam!);
+                return getDataHome(
+                    viewModel.login.data!.data!,
+                    viewModel.login.data!.kantor!,
+                    viewModel.login.data!.bisaabsen,
+                    viewModel.login.data!.jam!);
               default:
             }
             return Container();
@@ -139,7 +154,7 @@ class _home extends State<home> {
     );
   }
 
-  Widget getDataHome(Data data, Kantor kantor, Jam jam) {
+  Widget getDataHome(Data data, Kantor kantor, String? bisaabsen, Jam jam) {
     return Container(
         child: Column(
       children: <Widget>[
@@ -252,8 +267,8 @@ class _home extends State<home> {
                         BoxDecoration(borderRadius: BorderRadius.circular(10)),
                     width: MediaQuery.of(context).size.width,
                     child: Center(
-                        child: Text(
-                      "Rabu , 23 januari 2023",
+                        child: new Text(
+                      dateFormat.format(DateTime.now()),
                       style: TextStyle(
                           fontSize: 17,
                           fontWeight: FontWeight.bold,
@@ -268,14 +283,16 @@ class _home extends State<home> {
                             child: Column(
                               children: [
                                 Center(
-                                  child: Text(jam.jam!,
+                                  child: Text(
+                                      // (jam.jam! != null) ? jam.jam! :
+                                      (bisaabsen != 'no') ? jam.jam! : "--:--",
                                       style: TextStyle(
                                           fontSize: 30,
                                           fontWeight: FontWeight.bold)),
                                 ),
                                 Center(
                                   child: Text(
-                                    "JAM MASUK",
+                                    "MULAI",
                                     style: TextStyle(
                                         fontWeight: FontWeight.bold,
                                         color: Colors.grey),
@@ -295,13 +312,16 @@ class _home extends State<home> {
                             child: Column(
                               children: [
                                 Center(
-                                  child: Text(jam.batas!,
+                                  child: Text(
+                                      (bisaabsen != 'no')
+                                          ? jam.batas!
+                                          : "--:--",
                                       style: TextStyle(
                                           fontSize: 30,
                                           fontWeight: FontWeight.bold)),
                                 ),
                                 Center(
-                                  child: Text("JAM PULANG",
+                                  child: Text("AKHIR",
                                       style: TextStyle(
                                           fontWeight: FontWeight.bold,
                                           color: Colors.grey)),
@@ -328,7 +348,7 @@ class _home extends State<home> {
                   subheading('Informasi '),
                   GestureDetector(
                     onTap: () {},
-                    child: calendarIcon(),
+                    child: calendarIcon(data),
                   ),
                 ],
               ),
@@ -393,6 +413,16 @@ class _home extends State<home> {
               SizedBox(height: 5.0),
               Card(
                 child: ListTile(
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (BuildContext context) => cuti(
+                                id_pegawai:
+                                    viewModel.login.data!.data!.idPegawai,
+                                kodeunitkerja: viewModel
+                                    .login.data!.data!.kodeUnitkerja)));
+                  },
                   trailing: Icon(
                     Icons.arrow_forward_ios,
                     color: LightColors.kRed,
@@ -412,6 +442,12 @@ class _home extends State<home> {
               ),
               Card(
                 child: ListTile(
+                  onTap: () {
+                    Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                            builder: (BuildContext context) => ambilabsen()));
+                  },
                   trailing: Icon(
                     Icons.arrow_forward_ios,
                     color: LightColors.kRed,
@@ -436,13 +472,13 @@ class _home extends State<home> {
     ));
   }
 
-  GestureDetector calendarIcon() {
+  GestureDetector calendarIcon(Data data) {
     return GestureDetector(
       onTap: () async {
         await Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => profil(),
+            builder: (context) => profil(data),
           ),
         ).whenComplete(() => {getdata()});
       },

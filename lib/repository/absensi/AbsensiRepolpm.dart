@@ -4,6 +4,7 @@ import 'package:absensi/repository/absensi/AbsensiRepo.dart';
 import '../../data/remote/network/ApiEndPoints.dart';
 import '../../data/remote/network/BaseApiService.dart';
 import '../../data/remote/network/NetworkApiService.dart';
+import '../../model/absensi/CutiModel.dart';
 
 class AbsensiRepolpm implements AbsensiRepo {
   get http => null;
@@ -25,6 +26,24 @@ class AbsensiRepolpm implements AbsensiRepo {
           await _apiService.postResponse(ApiEndPoints().addabsen, data);
       //print("$response");
       final jsonData = AbsensiModel.fromJson(response);
+      return jsonData;
+    } catch (e) {
+      throw e;
+      print("MARAJ-E $e}");
+    }
+  }
+
+  @override
+  Future<CutiModel?> getcuti(String id, String id_instansi) async {
+    try {
+      Map<String, String> data = {
+        "id": id,
+        "id_instansi": id_instansi,
+      };
+      dynamic response =
+          await _apiService.postResponse(ApiEndPoints().getcuti, data);
+      //print("$response");
+      final jsonData = CutiModel.fromJson(response);
       return jsonData;
     } catch (e) {
       throw e;

@@ -1,31 +1,37 @@
 import 'package:absensi/screens/home/home.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+
+import '../../theme/colors/light_colors.dart';
 
 class Nointernet extends StatelessWidget {
   Nointernet();
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: Color.fromARGB(66, 152, 170, 194),
+    return Center(
+        child: Container(
       child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Container(
-            width: MediaQuery.of(context).size.width,
-            height: 420,
+            width: 200,
+            height: 170,
             decoration: BoxDecoration(
-                image: DecorationImage(
-                    fit: BoxFit.fill,
-                    image: AssetImage("assets/images/nointernet.png"))),
+              color: Colors.white,
+            ),
+            child: SvgPicture.asset(
+              'assets/images/nointernet.svg',
+              fit: BoxFit.fill,
+            ),
           ),
           Container(
-            margin: EdgeInsets.only(top: 20),
             child: Column(
               children: [
                 Center(
                     child: Text(
                   "Internet Bermasalah",
-                  style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                 )),
                 SizedBox(),
                 Center(
@@ -35,7 +41,7 @@ class Nointernet extends StatelessWidget {
                   style: TextStyle(
                     color: Color.fromARGB(255, 116, 114, 114),
                     fontSize: 15,
-                    fontWeight: FontWeight.bold,
+                    fontWeight: FontWeight.w400,
                   ),
                 ))
               ],
@@ -53,13 +59,15 @@ class Nointernet extends StatelessWidget {
               },
               // style: ButtonStyle(elevation: MaterialStateProperty(12.0 )),
               style: ElevatedButton.styleFrom(
-                  elevation: 12.0,
-                  textStyle: const TextStyle(color: Colors.white)),
+                elevation: 30,
+                textStyle: const TextStyle(color: Colors.white),
+                backgroundColor: LightColors.primary,
+              ),
               child: const Text('Coba Kembali'),
             ),
           )
         ],
       ),
-    );
+    ));
   }
 }

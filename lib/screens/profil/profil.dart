@@ -1,3 +1,7 @@
+import 'package:absensi/model/login/LoginModel.dart';
+import 'package:absensi/screens/bantuan/bantuan.dart';
+import 'package:absensi/screens/profil/editprofil.dart';
+import 'package:absensi/screens/profil/ubahkatasandi.dart';
 import 'package:absensi/screens/widget/textfield_widget.dart';
 import 'package:absensi/theme/colors/light_colors.dart';
 import 'package:animated_theme_switcher/animated_theme_switcher.dart';
@@ -6,9 +10,11 @@ import 'package:flutter/material.dart';
 
 import '../widget/appbar_widget.dart';
 import '../widget/profile_widget.dart';
+import 'package:location/location.dart';
 
 class profil extends StatefulWidget {
-  const profil({Key? key}) : super(key: key);
+  final Data data_peg;
+  const profil(this.data_peg, {Key? key}) : super(key: key);
 
   @override
   State<profil> createState() => _profil();
@@ -16,6 +22,36 @@ class profil extends StatefulWidget {
 }
 
 class _profil extends State<profil> {
+  bool _serviceEnabled = false;
+  late PermissionStatus _permissionGranted;
+  late LocationData _locationData;
+
+  final Location _location = Location();
+
+  @override
+  void initState() {
+    super.initState();
+    _checkLocationService();
+  }
+
+  Future<void> _checkLocationService() async {
+    _serviceEnabled = await _location.serviceEnabled();
+    if (!_serviceEnabled) {
+      _serviceEnabled = await _location.requestService();
+      if (!_serviceEnabled) {
+        return;
+      }
+    }
+
+    _permissionGranted = await _location.hasPermission();
+    if (_permissionGranted == PermissionStatus.denied) {
+      _permissionGranted = await _location.requestPermission();
+      if (_permissionGranted != PermissionStatus.granted) {
+        return;
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -45,8 +81,10 @@ class _profil extends State<profil> {
                   height: 130,
                   width: MediaQuery.of(context).size.width,
                   child: ProfileWidget(
-                    imagePath:
-                        "https://absensi.bengkaliskab.go.id/pegawai/1603051001/638d97f86d964.png",
+                    imagePath: "https://absensi.bengkaliskab.go.id/pegawai/" +
+                        widget.data_peg.kodeUnitkerja! +
+                        "/" +
+                        widget.data_peg.image!,
                     isEdit: true,
                     onClicked: () async {},
                   )),
@@ -55,7 +93,7 @@ class _profil extends State<profil> {
           Column(
             children: <Widget>[
               Text(
-                "Bohati Mulyadi",
+                widget.data_peg.nama.toString(),
                 style: TextStyle(
                     fontSize: 17,
                     fontWeight: FontWeight.bold,
@@ -65,20 +103,38 @@ class _profil extends State<profil> {
                 height: 20,
               ),
               Card(
-                child: ListTile(
-                  title: Text(
-                    "Pengaturan Akun",
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17),
+                child: InkWell(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => editprofil(widget.data_peg)),
+                    );
+                  },
+                  child: ListTile(
+                    title: Text(
+                      "Pengaturan Akun",
+                      style:
+                          TextStyle(fontWeight: FontWeight.bold, fontSize: 17),
+                    ),
+                    subtitle: Text("Pengaturan data akun"),
+                    leading: Icon(
+                      Icons.person,
+                      color: LightColors.primary,
+                    ),
+                    trailing: Icon(Icons.arrow_forward_ios),
                   ),
-                  subtitle: Text("Pengaturan data akun"),
-                  leading: Icon(
-                    Icons.person,
-                    color: LightColors.primary,
-                  ),
-                  trailing: Icon(Icons.arrow_forward_ios),
                 ),
               ),
               Card(
+                  child: InkWell(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => ubahsandi(widget.data_peg)),
+                  );
+                },
                 child: ListTile(
                   title: Text(
                     "Ubah Kata Sandi",
@@ -91,22 +147,15 @@ class _profil extends State<profil> {
                   ),
                   trailing: Icon(Icons.arrow_forward_ios),
                 ),
-              ),
+              )),
               Card(
-                child: ListTile(
-                  title: Text(
-                    "Lokasi",
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17),
-                  ),
-                  subtitle: Text("Untuk pengaturan Lokasi"),
-                  leading: Icon(
-                    Icons.location_searching_outlined,
-                    color: LightColors.primary,
-                  ),
-                  trailing: Icon(Icons.arrow_forward_ios),
-                ),
-              ),
-              Card(
+                  child: InkWell(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => bantuan()),
+                  );
+                },
                 child: ListTile(
                   title: Text(
                     "Pusat Bantuan",
@@ -119,7 +168,29 @@ class _profil extends State<profil> {
                   ),
                   trailing: Icon(Icons.arrow_forward_ios),
                 ),
-              )
+              )),
+              Card(
+                  child: ListTile(
+                leading: Icon(Icons.location_on),
+                title: Text('Enable Location'),
+                trailing: Switch(
+                  value: _serviceEnabled,
+                  onChanged: (bool value) async {
+                    setState(() {
+                      _serviceEnabled = value;
+                    });
+
+                    if (value) {
+                      _permissionGranted = await _location.requestPermission();
+                      if (_permissionGranted == PermissionStatus.granted) {
+                        _locationData = await _location.getLocation();
+                      }
+                    } else {
+                      // _locationData = null;
+                    }
+                  },
+                ),
+              )),
             ],
           )
         ],

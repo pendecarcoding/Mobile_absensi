@@ -27,7 +27,7 @@ class _bantuan extends State<bantuan> {
         backgroundColor: LightColors.primary,
       ),
       body: WebView(
-        initialUrl: 'https://absensi.bengkaliskab.go.id/twakto/message',
+        initialUrl: 'https://tawk.to/chat/64d37791cc26a871b02e37f5/1h7d0m4uu',
         javascriptMode: JavascriptMode.unrestricted,
         onWebViewCreated: (WebViewController webViewController) {
           _controller.complete(webViewController);

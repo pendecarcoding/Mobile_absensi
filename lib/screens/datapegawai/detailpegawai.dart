@@ -32,7 +32,9 @@ class _detailpegawai extends State<detailpegawai> {
     return Scaffold(
         appBar: AppBar(
           elevation: 0.3,
-          iconTheme: IconThemeData(color: Colors.black),
+          iconTheme: IconThemeData(
+            color: Colors.white, //change your color here
+          ),
           actions: [IconButton(onPressed: (() {}), icon: Icon(Icons.call))],
           centerTitle: false,
           title: Container(
@@ -60,12 +62,12 @@ class _detailpegawai extends State<detailpegawai> {
                     ((widget.pegawai.gd! == "-") ? "" : widget.pegawai.gd!) +
                         widget.pegawai.nama! +
                         widget.pegawai.gb!,
-                    style: TextStyle(fontSize: 16, color: Colors.black),
+                    style: TextStyle(fontSize: 16, color: Colors.white),
                     maxLines: 2,
                   ))
             ],
           )),
-          backgroundColor: Colors.white,
+          backgroundColor: LightColors.primary,
         ),
         body: ListView(
           children: [

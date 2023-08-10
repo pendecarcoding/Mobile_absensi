@@ -68,20 +68,21 @@ class _login extends State<login> {
         key: _key,
         child: Scaffold(
             body: Container(
+          color: LightColors.primary,
           width: double.infinity,
           height: double.infinity,
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [
-                Color.fromARGB(255, 246, 246, 246),
-                Color.fromARGB(255, 255, 255, 255),
-                Color.fromARGB(255, 255, 255, 255),
-                Color.fromARGB(255, 255, 255, 255),
-              ],
-            ),
-          ),
+          // decoration: const BoxDecoration(
+          //   gradient: LinearGradient(
+          //     begin: Alignment.topLeft,
+          //     end: Alignment.bottomRight,
+          //     colors: [
+          //       Color.fromARGB(255, 246, 246, 246),
+          //       Color.fromARGB(255, 255, 255, 255),
+          //       Color.fromARGB(255, 255, 255, 255),
+          //       Color.fromARGB(255, 255, 255, 255),
+          //     ],
+          //   ),
+          // ),
           child: SingleChildScrollView(
               child: Padding(
             padding:
@@ -89,12 +90,12 @@ class _login extends State<login> {
             child: Column(
               children: [
                 const Text(
-                  'E-Absensi',
+                  'ABSENSIKU',
                   style: TextStyle(
                       fontFamily: 'PT-Sans',
                       fontSize: 30,
                       fontWeight: FontWeight.bold,
-                      color: Color.fromARGB(255, 75, 75, 75)),
+                      color: Color.fromARGB(255, 255, 255, 255)),
                 ),
                 const SizedBox(
                   height: 20,
@@ -114,7 +115,7 @@ class _login extends State<login> {
                       fontFamily: 'PT-Sans',
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
-                      color: Color.fromARGB(255, 151, 150, 150),
+                      color: Color.fromARGB(255, 255, 255, 255),
                     ),
                   ),
                 ),
@@ -130,7 +131,8 @@ class _login extends State<login> {
                     }
                   },
                   onSaved: (e) => nip = e,
-                  prefixedIcon: const Icon(Icons.mail, color: Colors.white),
+                  prefixedIcon: const Icon(Icons.mail,
+                      color: Color.fromARGB(255, 240, 181, 19)),
                 ),
                 const SizedBox(
                   height: 30,
@@ -143,7 +145,7 @@ class _login extends State<login> {
                       fontFamily: 'PT-Sans',
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
-                      color: Color.fromARGB(255, 75, 75, 75),
+                      color: Color.fromARGB(255, 255, 255, 255),
                     ),
                   ),
                 ),
@@ -159,13 +161,14 @@ class _login extends State<login> {
                     }
                   },
                   onSaved: (e) => password = e,
-                  prefixedIcon: const Icon(Icons.lock, color: Colors.white),
+                  prefixedIcon: const Icon(Icons.lock,
+                      color: Color.fromARGB(255, 240, 181, 19)),
                 ),
                 const SizedBox(
                   height: 15,
                 ),
                 _buildForgotPasswordButton(),
-                _buildRemeberMe(),
+                // _buildRemeberMe(),
                 const SizedBox(
                   height: 15,
                 ),
@@ -190,7 +193,7 @@ class _login extends State<login> {
           style: TextStyle(
             fontFamily: 'PT-Sans',
             fontSize: 14,
-            color: Color.fromARGB(255, 75, 75, 75),
+            color: Color.fromARGB(255, 255, 255, 255),
           ),
         ),
         onPressed: () {},
@@ -198,30 +201,31 @@ class _login extends State<login> {
     );
   }
 
-  Widget _buildRemeberMe() {
-    return Row(
-      children: [
-        Checkbox(
-          value: isChecked,
-          onChanged: (value) {
-            setState(() {
-              isChecked = value;
-            });
-          },
-          checkColor: Color.fromARGB(255, 56, 137, 203),
-          fillColor: MaterialStateProperty.all(Color.fromARGB(255, 75, 75, 75)),
-        ),
-        const Text(
-          'Remember me',
-          style: TextStyle(
-            fontFamily: 'PT-Sans',
-            fontSize: 14,
-            color: Color.fromARGB(255, 75, 75, 75),
-          ),
-        ),
-      ],
-    );
-  }
+  // Widget _buildRemeberMe() {
+  //   return Row(
+  //     children: [
+  //       Checkbox(
+  //         value: isChecked,
+  //         onChanged: (value) {
+  //           setState(() {
+  //             isChecked = value;
+  //           });
+  //         },
+  //         checkColor: Color.fromARGB(255, 56, 137, 203),
+  //         fillColor:
+  //             MaterialStateProperty.all(Color.fromARGB(255, 255, 255, 255)),
+  //       ),
+  //       const Text(
+  //         'Remember me',
+  //         style: TextStyle(
+  //           fontFamily: 'PT-Sans',
+  //           fontSize: 14,
+  //           color: Color.fromARGB(255, 255, 255, 255),
+  //         ),
+  //       ),
+  //     ],
+  //   );
+  // }
 
   Widget _buildLoginButton({required VoidCallback onPressed}) {
     return SizedBox(
@@ -230,7 +234,7 @@ class _login extends State<login> {
       child: ElevatedButton(
         style: ButtonStyle(
           backgroundColor: MaterialStateProperty.all(
-            LightColors.primary,
+            Color.fromARGB(255, 240, 181, 19),
           ),
           elevation: MaterialStateProperty.all(6),
           shape: MaterialStateProperty.all(
@@ -263,25 +267,25 @@ class _login extends State<login> {
     required Function(dynamic e) onSaved,
   }) {
     return Material(
-      color: Colors.transparent,
+      color: Color.fromARGB(0, 34, 33, 33),
       elevation: 2,
       child: TextFormField(
-        cursorColor: Colors.white,
+        cursorColor: Color.fromARGB(255, 36, 36, 36),
         cursorWidth: 2,
         obscureText: obscureText,
         validator: validator,
         onSaved: onSaved,
-        style: const TextStyle(color: Colors.white),
+        style: const TextStyle(color: Color.fromARGB(255, 24, 24, 24)),
         decoration: InputDecoration(
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(10.0),
           ),
           filled: true,
-          fillColor: Color.fromARGB(255, 106, 106, 106),
+          fillColor: Color.fromARGB(255, 251, 251, 251),
           prefixIcon: prefixedIcon,
           hintText: hintText,
           hintStyle: const TextStyle(
-            color: Color.fromARGB(255, 255, 255, 255),
+            color: Color.fromARGB(255, 30, 30, 30),
             fontWeight: FontWeight.bold,
             fontFamily: 'PTSans',
           ),

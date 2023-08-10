@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:absensi/model/login/LoginModel.dart';
 import 'package:absensi/screens/absensi/ambilabsen.dart';
+import 'package:absensi/screens/absensi/luardinas.dart';
 import 'package:absensi/screens/datapegawai/datapegawai.dart';
 import 'package:absensi/screens/widget/nointernet.dart';
 import 'package:flutter/material.dart';
@@ -18,6 +19,7 @@ import 'package:intl/intl.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import '../bantuan/bantuan.dart';
 import '../cuti/cuti.dart';
+import '../dinas/dinas.dart';
 import '../login/login.dart';
 import '../profil/profil.dart';
 import '../widget/LoadingWidget.dart';
@@ -55,7 +57,7 @@ class _home extends State<home> {
       await viewpegawai.getdata(
           id.toString(), viewModel.login.data!.data!.kodeUnitkerja!);
       // print(viewpegawai.data.data!.data!.first.nama!);
-      print(viewModel.login.data!.data!.kodeUnitkerja!);
+      print(id);
     } else {
       Navigator.pushReplacement(context,
           MaterialPageRoute(builder: (BuildContext context) => login()));
@@ -109,6 +111,16 @@ class _home extends State<home> {
           elevation: 0,
           actions: <Widget>[
             IconButton(
+              icon: const Icon(Icons.qr_code),
+              tooltip: 'Absen Luar Kantor',
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => luardinas()),
+                );
+              },
+            ),
+            IconButton(
               icon: const Icon(Icons.message),
               tooltip: 'Message',
               onPressed: () {
@@ -155,8 +167,9 @@ class _home extends State<home> {
   }
 
   Widget getDataHome(Data data, Kantor kantor, String? bisaabsen, Jam jam) {
-    return Container(
-        child: Column(
+    return SingleChildScrollView(
+        child: Container(
+            child: Column(
       children: <Widget>[
         Container(
           height: 260,
@@ -389,16 +402,16 @@ class _home extends State<home> {
                 subtitle: 'lihat daftar Pegawai Kantor',
               ),
               SizedBox(height: 15.0),
-              TaskColumn(
-                widget: datapegawai(
-                    kodeunitkerja: viewModel.login.data!.data!.kodeUnitkerja!),
-                jenis: 'route',
-                url: '',
-                icon: Icons.pie_chart,
-                iconBackgroundColor: LightColors.kRed,
-                title: 'Persentase Kehadiran',
-                subtitle: 'lihat persentase kehadiran anda',
-              ),
+              // TaskColumn(
+              //   widget: datapegawai(
+              //       kodeunitkerja: viewModel.login.data!.data!.kodeUnitkerja!),
+              //   jenis: 'route',
+              //   url: '',
+              //   icon: Icons.pie_chart,
+              //   iconBackgroundColor: LightColors.kRed,
+              //   title: 'Persentase Kehadiran',
+              //   subtitle: 'lihat persentase kehadiran anda',
+              // ),
             ],
           ),
         ),
@@ -443,6 +456,35 @@ class _home extends State<home> {
               Card(
                 child: ListTile(
                   onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (BuildContext context) => dinas(
+                                id_pegawai:
+                                    viewModel.login.data!.data!.idPegawai,
+                                kodeunitkerja: viewModel
+                                    .login.data!.data!.kodeUnitkerja)));
+                  },
+                  trailing: Icon(
+                    Icons.arrow_forward_ios,
+                    color: LightColors.kRed,
+                  ),
+                  leading: CircleAvatar(
+                    radius: 20.0,
+                    backgroundColor: LightColors.primary,
+                    child: Icon(
+                      Icons.car_crash_outlined,
+                      size: 15.0,
+                      color: Colors.white,
+                    ),
+                  ),
+                  title: Text("Pengajuan Izin Dinas"),
+                  subtitle: Text("untuk pengurusan izin Dinas"),
+                ),
+              ),
+              Card(
+                child: ListTile(
+                  onTap: () {
                     Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(
@@ -469,7 +511,7 @@ class _home extends State<home> {
           ),
         ),
       ],
-    ));
+    )));
   }
 
   GestureDetector calendarIcon(Data data) {

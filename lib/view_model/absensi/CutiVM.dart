@@ -71,6 +71,23 @@ class CutiVM extends ChangeNotifier {
             _setMainCuti(ApiResponse.error(error.toString())));
   }
 
+  updatedinasnoimage(Map<String, String> data) {
+    _myRepo
+        .updatedinasnoimage(data)
+        .then((value) => _setMainCuti(ApiResponse.completed(value)))
+        .onError((error, stackTrace) =>
+            _setMainCuti(ApiResponse.error(error.toString())));
+  }
+
+  Future<void> updatedinasimage(
+      File file, Map<String, dynamic> requestData) async {
+    _myRepo
+        .updatedinasuseimage(file, requestData)
+        .then((value) => _setMainCuti(ApiResponse.completed(value)))
+        .onError((error, stackTrace) =>
+            _setMainCuti(ApiResponse.error(error.toString())));
+  }
+
   //Add Cuti
   Future<void> adddatacuti(File file, Map<String, dynamic> requestData) async {
     _myRepo

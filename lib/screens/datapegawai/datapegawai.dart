@@ -25,17 +25,22 @@ class datapegawai extends StatefulWidget {
 
 class _datapegawai extends State<datapegawai> {
   final PegawaiVM viewpegawai = PegawaiVM();
-
+  bool _isSearchVisible = false; // Keep track of search visibility
+  TextEditingController _searchController = TextEditingController();
+  FocusNode _searchFocus = FocusNode(); // FocusNode for search input
+  List<Pegawai>? originalList;
+  List<Pegawai>? Listpegawai;
   @override
   void initState() {
-    getdata();
+    String query = '';
+    getdata(query);
     super.initState();
   }
 
-  getdata() async {
+  getdata(query) async {
     dynamic id = await SessionManager().get("id");
     if (id != null) {
-      await viewpegawai.getdata(id.toString(), widget.kodeunitkerja);
+      await viewpegawai.getdata(id.toString(), widget.kodeunitkerja, query);
 
       // print(viewpegawai.data.data!.data!.first.nama!);
       //print(viewModel.login.data!.data!.kodeUnitkerja!);
@@ -45,45 +50,91 @@ class _datapegawai extends State<datapegawai> {
     }
   }
 
+  void _toggleSearchVisibility() {
+    setState(() {
+      _isSearchVisible = !_isSearchVisible;
+      if (_isSearchVisible) {
+        _searchFocus.requestFocus(); // Focus the search input
+      } else {
+        _searchController.clear();
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          elevation: 0.3,
-          iconTheme: IconThemeData(
-            color: Colors.white, //change your color here
-          ),
-          actions: [IconButton(onPressed: (() {}), icon: Icon(Icons.search))],
-          centerTitle: true,
-          title: Text(
-            "Data pegawai",
-            style: TextStyle(
-                fontWeight: FontWeight.bold, fontSize: 20, color: Colors.white),
-          ),
-          backgroundColor: LightColors.primary,
+      appBar: AppBar(
+        elevation: 0.3,
+        iconTheme: IconThemeData(
+          color: Colors.white, // Change your color here
         ),
-        body: ChangeNotifierProvider<PegawaiVM>(
-            create: (BuildContext context) => viewpegawai,
-            child: Consumer<PegawaiVM>(builder: (context, viewpegawai, _) {
-              switch (viewpegawai.data.status) {
-                case Status.LOADING:
-                  return LoadingWidget();
-                case Status.ERROR:
-                  return MyErrorWidget(viewpegawai.data.message ?? "NA");
-                case Status.COMPLETED:
-                  return _widgetbody(viewpegawai.data.data!.data!);
+        actions: [
+          IconButton(
+            onPressed: _toggleSearchVisibility,
+            icon: _isSearchVisible
+                ? Icon(Icons.close) // Change to close icon
+                : Icon(Icons.search), // Default search icon
+          ),
+        ],
+        centerTitle: true,
+        title: _isSearchVisible
+            ? TextField(
+                controller: _searchController,
+                focusNode: _searchFocus, // Assign the focus node
+                style: TextStyle(color: Colors.white),
+                onChanged: (query) {
+                  search(query); // Call your search function here
+                },
+                decoration: InputDecoration(
+                  hintText: "Search...",
+                  hintStyle: TextStyle(color: Colors.white70),
+                  border: InputBorder.none,
+                ),
+              )
+            : Text(
+                "Data pegawai",
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 20,
+                  color: Colors.white,
+                ),
+              ),
+        backgroundColor: LightColors.primary,
+      ),
+      body: ChangeNotifierProvider<PegawaiVM>(
+        create: (BuildContext context) => viewpegawai,
+        child: Consumer<PegawaiVM>(
+          builder: (context, viewpegawai, _) {
+            switch (viewpegawai.data.status) {
+              case Status.LOADING:
+                return LoadingWidget();
+              case Status.ERROR:
+                return MyErrorWidget(viewpegawai.data.message ?? "NA");
+              case Status.COMPLETED:
+                Listpegawai = viewpegawai.data.data!.data!;
 
-                default:
-              }
-              return Container();
-            })));
+                return _widgetbody(Listpegawai);
+
+              default:
+                return Container();
+            }
+          },
+        ),
+      ),
+    );
   }
 
-  Widget _widgetbody(List<Pegawai>? Listanak) {
+  Future<void> search(String query) async {
+    await getdata(query);
+    print(query);
+  }
+
+  Widget _widgetbody(Listpegawai) {
     return ListView.builder(
-        itemCount: Listanak?.length,
+        itemCount: Listpegawai?.length,
         itemBuilder: (context, position) {
-          return _getAnakListItem(Listanak![position]);
+          return _getAnakListItem(Listpegawai![position]);
         });
   }
 

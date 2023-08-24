@@ -33,12 +33,28 @@ class _login extends State<login> {
   }
 
   login() async {
-    await viewModel.actlogin(nip!, password!);
+    var data = await viewModel.actlogin(nip!, password!);
     switch (viewModel.login.status) {
+      case Status.ERROR:
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: const Text('Username dan password salah'),
+          ),
+        );
+        break;
       case Status.COMPLETED:
         try {
-          viewModel.login.data!.data!.idUser;
-          savepref(viewModel.login.data!.data!.idUser);
+          if (viewModel.login.data!.data! == null) {
+            // ScaffoldMessenger.of(context).showSnackBar(
+            //   SnackBar(
+            //     content: const Text('Username dan password salah'),
+            //   ),
+            // );
+            print("SALAH PASSWORD");
+          } else {
+            viewModel.login.data!.data!.idUser;
+            savepref(viewModel.login.data!.data!.idUser);
+          }
         } catch (_) {
           // <-- removing the on Exception clause
           ScaffoldMessenger.of(context).showSnackBar(
@@ -89,20 +105,20 @@ class _login extends State<login> {
                 const EdgeInsets.symmetric(horizontal: 20).copyWith(top: 60),
             child: Column(
               children: [
-                const Text(
-                  'ABSENSIKU',
-                  style: TextStyle(
-                      fontFamily: 'PT-Sans',
-                      fontSize: 30,
-                      fontWeight: FontWeight.bold,
-                      color: Color.fromARGB(255, 255, 255, 255)),
-                ),
+                // const Text(
+                //   'ABSENSIKU',
+                //   style: TextStyle(
+                //       fontFamily: 'PT-Sans',
+                //       fontSize: 30,
+                //       fontWeight: FontWeight.bold,
+                //       color: Color.fromARGB(255, 255, 255, 255)),
+                // ),
                 const SizedBox(
                   height: 20,
                 ),
                 Image.asset(
-                  "assets/images/slider_1.png",
-                  width: 190,
+                  "assets/images/absen-removebg-preview.png",
+                  width: 300,
                 ),
                 const SizedBox(
                   height: 10,
@@ -189,15 +205,41 @@ class _login extends State<login> {
       alignment: Alignment.centerRight,
       child: TextButton(
         child: const Text(
-          'Forgot Password?',
+          'Lupa Password?',
           style: TextStyle(
             fontFamily: 'PT-Sans',
             fontSize: 14,
             color: Color.fromARGB(255, 255, 255, 255),
           ),
         ),
-        onPressed: () {},
+        onPressed: () {
+          _dialoglupa(context);
+        },
       ),
+    );
+  }
+
+  Future<void> _dialoglupa(BuildContext context) {
+    return showDialog<void>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('PERHATIAN !!!'),
+          content: const Text(
+              'Untuk Melakukan Reset Password silahkan hubungi Operator SKPD anda'),
+          actions: <Widget>[
+            TextButton(
+              style: TextButton.styleFrom(
+                textStyle: Theme.of(context).textTheme.labelLarge,
+              ),
+              child: const Text('OK'),
+              onPressed: () async {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
     );
   }
 

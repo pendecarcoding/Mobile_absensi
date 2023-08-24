@@ -2,10 +2,12 @@ import 'dart:io';
 
 import 'package:absensi/model/absensi/CutiModel.dart';
 import 'package:absensi/screens/cuti/viewsurat.dart';
+import 'package:absensi/screens/dinas/viewsuratdinas.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_session_manager/flutter_session_manager.dart';
 
+import '../../model/absensi/DinasModel.dart';
 import '../../theme/colors/light_colors.dart';
 import '../../view_model/absensi/CutiVM.dart';
 import '../widget/textfield_widget.dart';
@@ -14,22 +16,17 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter_pdfview/flutter_pdfview.dart';
 
 class editdinas extends StatefulWidget {
-  /*final kantor;s
-  final pegawai;
-
-  const ambilabsen({super.key, required this.kantor, required this.pegawai});
-  */
   final id_pegawai;
-  final Cuti data_cuti;
+  final Dinas data_dinas;
   const editdinas(
-      {super.key, required this.id_pegawai, required this.data_cuti});
+      {super.key, required this.id_pegawai, required this.data_dinas});
   @override
   State<editdinas> createState() => _editdinas();
 }
 
 class _editdinas extends State<editdinas> {
   String? selectedOption;
-  String? jeniscuti, dari, sampai, alasan;
+  String? jeniscuti, dari, sampai, alasan, nospt;
   final CutiVM viewModel = CutiVM();
   DateTime? fromDate;
   bool isLoading = false;
@@ -39,14 +36,14 @@ class _editdinas extends State<editdinas> {
   TextEditingController dateController = TextEditingController();
   TextEditingController dateendController = TextEditingController();
   TextEditingController _textEditingController = TextEditingController();
+  TextEditingController _textSPT = TextEditingController();
   late String rangecuti;
 
   @override
   void initState() {
-    _textEditingController.text = widget.data_cuti.alasan!;
-    selectedOption =
-        widget.data_cuti.jenisCuti; //set the initial value of text field
-    rangecuti = widget.data_cuti.rentangAbsen!;
+    _textEditingController.text = widget.data_dinas.alasan!;
+    _textSPT.text = widget.data_dinas.nospt!;
+    rangecuti = widget.data_dinas.rentangAbsen!;
     final List<String> parts = explodeString(rangecuti, ' s/d ');
     final String part0 = getExplodedPart(parts, 0);
     final String part1 = getExplodedPart(parts, 1);
@@ -106,12 +103,12 @@ class _editdinas extends State<editdinas> {
   }
 
   addactcuti() async {
-    dynamic id = widget.data_cuti.idPegawai;
+    dynamic id = widget.data_dinas.idPegawai;
     if (id != null) {
       Map<String, String> data = {
         'id': id.toString(),
-        'id_cuti': widget.data_cuti.id.toString(),
-        'jenis_cuti': jeniscuti!,
+        'id_dinas': widget.data_dinas.id.toString(),
+        'nospt': nospt!,
         'dari': dari!,
         'sampai': sampai!,
         'alasan': alasan!,
@@ -119,10 +116,10 @@ class _editdinas extends State<editdinas> {
       if (filePath != null) {
         handleClick();
         File pdfFile = File(filePath!);
-        await viewModel.updatecutiimage(pdfFile, data);
+        await viewModel.updatedinasimage(pdfFile, data);
       } else {
         handleClick();
-        await viewModel.updatecutinoimage(data);
+        await viewModel.updatedinasnoimage(data);
       }
     }
   }
@@ -180,52 +177,13 @@ class _editdinas extends State<editdinas> {
         key: _key,
         child: Scaffold(
           appBar: AppBar(
-            title: Text("Form Edit Cuti"),
+            title: Text("Form Edit Dinas"),
             backgroundColor: LightColors.primary,
           ),
           body: ListView(
             padding: EdgeInsets.symmetric(horizontal: 32, vertical: 30),
             physics: BouncingScrollPhysics(),
             children: <Widget>[
-              Container(
-                width: 100, // Set the desired width value
-                child: DropdownButtonFormField<String>(
-                  value: selectedOption,
-                  decoration: InputDecoration(
-                    labelText: 'Jenis Cuti',
-                    // Add any additional styling or decoration properties here
-                  ),
-                  onChanged: (String? newValue) {
-                    // This callback will be triggered when the selected option changes
-                    // You can update the selectedOption variable or perform any other actions here
-                    setState(() {
-                      selectedOption = newValue;
-                    });
-                  },
-                  items: <String>[
-                    'Cuti Tahunan',
-                    'Cuti Besar',
-                    'Cuti Sakit',
-                    'Cuti Melahirkan',
-                    'Cuti Karena Alasan Penting',
-                    'Cuti Diluar Tanggungan Negara',
-                    // Add more options as needed
-                  ].map<DropdownMenuItem<String>>((String value) {
-                    return DropdownMenuItem<String>(
-                      value: value,
-                      child: Text(value),
-                    );
-                  }).toList(),
-                  validator: (e) {
-                    if (e == null || e.isEmpty) {
-                      return 'Jenis Cuti Tidak Boleh Kosong';
-                    }
-                    return null;
-                  },
-                  onSaved: (e) => jeniscuti = e,
-                ),
-              ),
-              const SizedBox(height: 15),
               Row(
                 children: <Widget>[
                   Expanded(
@@ -307,21 +265,22 @@ class _editdinas extends State<editdinas> {
                 onTap: () async {
                   final String link =
                       'https://absensi.bengkaliskab.go.id/uploads/' +
-                          widget.data_cuti.file!.toString();
+                          widget.data_dinas.file!.toString();
                   var result = await Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (BuildContext context) => viewSurat(link: link),
+                      builder: (BuildContext context) =>
+                          viewSuratdinas(link: link),
                     ),
                   );
                 },
                 child: RichText(
                   text: TextSpan(
-                    text: 'Berkas Cuti Sebelumnya: ',
+                    text: 'Berkas SPT Sebelumnya: ',
                     style: TextStyle(color: Colors.black),
                     children: [
                       TextSpan(
-                        text: widget.data_cuti.file!,
+                        text: widget.data_dinas.file!,
                         style: TextStyle(
                           color: Colors.blue,
                           decoration: TextDecoration.underline,
@@ -329,6 +288,22 @@ class _editdinas extends State<editdinas> {
                       ),
                     ],
                   ),
+                ),
+              ),
+              const SizedBox(height: 30),
+              TextFormField(
+                controller: _textSPT,
+                keyboardType: TextInputType.multiline,
+                maxLines: null,
+                validator: (e) {
+                  if (e!.isEmpty) {
+                    return "Field ini tidak boleh kosong";
+                  }
+                },
+                onSaved: (e) => nospt = e,
+                decoration: InputDecoration(
+                  labelText: 'NO SPT',
+                  border: OutlineInputBorder(),
                 ),
               ),
               const SizedBox(height: 30),
@@ -343,7 +318,7 @@ class _editdinas extends State<editdinas> {
                 },
                 onSaved: (e) => alasan = e,
                 decoration: InputDecoration(
-                  labelText: 'Alasan Pengajuan Cuti',
+                  labelText: 'Keterangan Dinas',
                   border: OutlineInputBorder(),
                 ),
               ),
@@ -369,7 +344,7 @@ class _editdinas extends State<editdinas> {
                           : SizedBox(),
                       if (!isLoading)
                         Text(
-                          'Ajukan Cuti',
+                          'Update Dinas',
                           style: TextStyle(
                             fontSize: 16,
                             color: Colors.white,

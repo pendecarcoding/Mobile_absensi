@@ -1,10 +1,12 @@
 import 'package:absensi/model/absensi/AbsensiModel.dart';
+import 'package:absensi/model/absensi/DetailAbsenModel.dart';
 import 'package:absensi/repository/absensi/AbsensiRepo.dart';
 
 import '../../data/remote/network/ApiEndPoints.dart';
 import '../../data/remote/network/BaseApiService.dart';
 import '../../data/remote/network/NetworkApiService.dart';
 import '../../model/absensi/CutiModel.dart';
+import '../../model/absensi/OutLocationModel.dart';
 
 class AbsensiRepolpm implements AbsensiRepo {
   get http => null;
@@ -44,6 +46,34 @@ class AbsensiRepolpm implements AbsensiRepo {
           await _apiService.postResponse(ApiEndPoints().getcuti, data);
       //print("$response");
       final jsonData = CutiModel.fromJson(response);
+      return jsonData;
+    } catch (e) {
+      throw e;
+      print("MARAJ-E $e}");
+    }
+  }
+
+  @override
+  Future<DetailAbsenModel?> detailabsensi(Map<String, String> data) async {
+    try {
+      dynamic response =
+          await _apiService.postResponse(ApiEndPoints().detailabsensi, data);
+      //print("$response");
+      final jsonData = DetailAbsenModel.fromJson(response);
+      return jsonData;
+    } catch (e) {
+      throw e;
+      print("MARAJ-E $e}");
+    }
+  }
+
+  @override
+  Future<OutLocationModel?> getoutlocationrepo(Map<String, String> data) async {
+    try {
+      dynamic response =
+          await _apiService.postResponse(ApiEndPoints().getoutlocation, data);
+      //print("$response");
+      final jsonData = OutLocationModel.fromJson(response);
       return jsonData;
     } catch (e) {
       throw e;

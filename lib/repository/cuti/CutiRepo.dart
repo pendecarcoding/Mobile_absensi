@@ -12,6 +12,14 @@ class CutiRepo {
   Future<DinasModel?> getdinas(String id, String id_instansi) async {}
   Future<ResponseModel?> addcuti(
       File file, Map<String, dynamic> requestData) async {}
+  Future<ResponseModel?> adddinas(
+      File file, Map<String, dynamic> requestData) async {}
+
+  Future<ResponseModel?> updatedinasnoimage(
+      Map<String, dynamic> requestData) async {}
+  Future<ResponseModel?> updatedinasuseimage(
+      File file, Map<String, dynamic> requestData) async {}
+
   Future<ResponseModel?> deletecuti(String id) async {}
   Future<ResponseModel?> deletedinas(String id) async {}
   Future<ResponseModel?> updatecutinoimage(

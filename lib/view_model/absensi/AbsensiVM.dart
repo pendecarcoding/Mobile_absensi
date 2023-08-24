@@ -1,15 +1,25 @@
 import 'package:absensi/model/absensi/AbsensiModel.dart';
 import 'package:absensi/model/absensi/CutiModel.dart';
+import 'package:absensi/model/absensi/DetailAbsenModel.dart';
 import 'package:flutter/cupertino.dart';
 
 import '../../data/remote/response/ApiResponse.dart';
+import '../../model/absensi/OutLocationModel.dart';
 import '../../repository/absensi/AbsensiRepolpm.dart';
 
 class AbsensiVM extends ChangeNotifier {
   final _myRepo = AbsensiRepolpm();
 
   ApiResponse<AbsensiModel> data = ApiResponse.loading();
+  ApiResponse<DetailAbsenModel> absen = ApiResponse.loading();
   ApiResponse<CutiModel> datacuti = ApiResponse.loading();
+  ApiResponse<OutLocationModel> outlocation = ApiResponse.loading();
+
+  void _setMainAbsen(ApiResponse<DetailAbsenModel> response) {
+    print("$response");
+    absen = response;
+    notifyListeners();
+  }
 
   void _setMain(ApiResponse<AbsensiModel> response) {
     print("$response");
@@ -17,10 +27,33 @@ class AbsensiVM extends ChangeNotifier {
     notifyListeners();
   }
 
+  void _setMainOutLocation(ApiResponse<OutLocationModel> response) {
+    print("$response");
+    outlocation = response;
+    notifyListeners();
+  }
+
   void _setMainCuti(ApiResponse<CutiModel> response) {
     print("$response");
     datacuti = response;
     notifyListeners();
+  }
+
+  Future<void> detailabsensi(Map<String, String> data) async {
+    _myRepo
+        .detailabsensi(data)
+        .then((value) => _setMainAbsen(ApiResponse.completed(value)))
+        .onError((error, stackTrace) =>
+            _setMainAbsen(ApiResponse.error(error.toString())));
+  }
+
+// get Outlocation
+  Future<void> getoutlocation(Map<String, String> data) async {
+    _myRepo
+        .getoutlocationrepo(data)
+        .then((value) => _setMainOutLocation(ApiResponse.completed(value)))
+        .onError((error, stackTrace) =>
+            _setMainOutLocation(ApiResponse.error(error.toString())));
   }
 
   //Login Data

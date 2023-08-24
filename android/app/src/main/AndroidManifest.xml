@@ -14,9 +14,9 @@
 <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 <uses-permission android:name="android.permission.WAKE_LOCK" />
    <application
-        android:label="absensi"
+        android:label="absensiku"
         android:name="${applicationName}"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/launcher_icon">
                     <meta-data android:name="com.google.android.geo.API_KEY"
                android:value="AIzaSyAauldRdeMDOgXxAxqE5P2iB1zoTE8MCCU"/>
         <activity

@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 import '../../theme/colors/light_colors.dart';
+import 'luardinasambil.dart';
 
 class luardinas extends StatefulWidget {
   /*final kantor;
@@ -17,6 +18,7 @@ class luardinas extends StatefulWidget {
 }
 
 class _luardinas extends State<luardinas> {
+  bool isNavigating = false; // Add this line
   Barcode? result;
   QRViewController? controller;
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
@@ -40,9 +42,7 @@ class _luardinas extends State<luardinas> {
           Expanded(
             flex: 1,
             child: Center(
-              child: (result != null)
-                  ? Text('Result: ${result!.code}')
-                  : Text('Scan a QR code'),
+              child: Text('Pindai Qr Code Absensi'),
             ),
           ),
         ],
@@ -55,9 +55,27 @@ class _luardinas extends State<luardinas> {
       this.controller = controller;
     });
     controller.scannedDataStream.listen((scanData) {
-      setState(() {
-        result = scanData;
-      });
+      if (scanData != null && !isNavigating) {
+        // Check the flag
+        setState(() {
+          result = scanData;
+        });
+
+        // Set the flag to true to prevent multiple navigations
+        isNavigating = true;
+
+        // Navigate to another screen with the scanned QR code value
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => luardinasambil(
+                result!.code.toString()), // Replace with your screen
+          ),
+        ).then((_) {
+          // Reset the flag after returning from the navigation
+          isNavigating = false;
+        });
+      }
     });
   }
 

@@ -369,7 +369,7 @@ class _editcuti extends State<editcuti> {
                           : SizedBox(),
                       if (!isLoading)
                         Text(
-                          'Ajukan Cuti',
+                          'Update Cuti',
                           style: TextStyle(
                             fontSize: 16,
                             color: Colors.white,

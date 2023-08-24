@@ -67,6 +67,35 @@ class CutiRepolpm implements CutiRepo {
   }
 
   @override
+  Future<ResponseModel> updatedinasnoimage(
+      Map<String, dynamic> requestData) async {
+    try {
+      dynamic response = await _apiService.postResponse(
+          ApiEndPoints().updatedinasnoimage, requestData);
+      final jsonData = ResponseModel.fromJson(response);
+      return jsonData;
+    } catch (e) {
+      throw e;
+      print("MARAJ-E $e}");
+    }
+  }
+
+  @override
+  Future<ResponseModel?> updatedinasuseimage(
+      File file, Map<String, dynamic> requestData) async {
+    try {
+      dynamic response = await _apiService.postResponseMultipart(
+          ApiEndPoints().updatedinasimage, file, requestData);
+      //print("$response");
+      final jsonData = ResponseModel.fromJson(response);
+      return jsonData;
+    } catch (e) {
+      throw e;
+      print("MARAJ-E $e}");
+    }
+  }
+
+  @override
   Future<ResponseModel?> addcuti(
       File file, Map<String, dynamic> requestData) async {
     try {

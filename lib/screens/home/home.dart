@@ -55,7 +55,7 @@ class _home extends State<home> {
     if (id != null) {
       await viewModel.DetailAccount(id.toString());
       await viewpegawai.getdata(
-          id.toString(), viewModel.login.data!.data!.kodeUnitkerja!);
+          id.toString(), viewModel.login.data!.data!.kodeUnitkerja!, '');
       // print(viewpegawai.data.data!.data!.first.nama!);
       print(id);
     } else {

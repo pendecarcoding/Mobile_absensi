@@ -177,7 +177,8 @@ class _cuti extends State<cuti> {
                               context, item.id.toString(), viewCuti, item);
                         } else if (value == 'batal') {
                           // Handle delete action
-                          cancelAlert(context, item.id.toString());
+                          batalkanAlert(
+                              context, item.id.toString(), viewCuti, item);
                         }
                       },
                       child: Icon(Icons.more_vert,
@@ -351,38 +352,6 @@ Future<void> batalkanAlert(
                 Navigator.pop(context, true);
               });
             },
-          ),
-        ],
-      );
-    },
-  );
-}
-
-Future<void> cancelAlert(BuildContext context, id) {
-  return showDialog<void>(
-    context: context,
-    builder: (BuildContext context) {
-      return AlertDialog(
-        title: const Text(
-            'Apakah anda yakin akan membatalkan pengajuan cuti ini ?'),
-        content:
-            const Text('Pengajuan yang dibatalkan tidak dapat di ajukan ulang'),
-        actions: <Widget>[
-          TextButton(
-            style: TextButton.styleFrom(
-              textStyle: Theme.of(context).textTheme.labelLarge,
-            ),
-            child: const Text('Tidak'),
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-          ),
-          TextButton(
-            style: TextButton.styleFrom(
-              textStyle: Theme.of(context).textTheme.labelLarge,
-            ),
-            child: const Text('Ya'),
-            onPressed: () async {},
           ),
         ],
       );

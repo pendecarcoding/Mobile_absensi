@@ -10,9 +10,13 @@ class PegawaiRepolpm implements PegawaiRepo {
   BaseApiService _apiService = NetworkApiService();
 
   @override
-  Future<EmployeeModel?> getlistemployee(id, kodeunitkerja) async {
+  Future<EmployeeModel?> getlistemployee(id, kodeunitkerja, query) async {
     try {
-      Map<String, String> data = {"id": id, "kode_unitkerja": kodeunitkerja};
+      Map<String, String> data = {
+        "id": id,
+        "kode_unitkerja": kodeunitkerja,
+        "nama_query": query
+      };
       dynamic response =
           await _apiService.postResponse(ApiEndPoints().getemployee, data);
       //print("$response");

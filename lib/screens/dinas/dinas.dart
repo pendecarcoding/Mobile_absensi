@@ -154,17 +154,17 @@ class _dinas extends State<dinas> {
                       onSelected: (value) async {
                         if (value == 'edit') {
                           // Handle edit action
-                          // var result = await Navigator.push(
-                          //     context,
-                          //     MaterialPageRoute(
-                          //         builder: (BuildContext context) => editdinas(
-                          //             id_pegawai: widget.id_pegawai,
-                          //             data_cuti: item)));
-                          // if (result == true) {
-                          //   await getdata();
-                          // } else {
-                          //   await getdata();
-                          // }
+                          var result = await Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (BuildContext context) => editdinas(
+                                      id_pegawai: widget.id_pegawai,
+                                      data_dinas: item)));
+                          if (result == true) {
+                            await getdata();
+                          } else {
+                            await getdata();
+                          }
                         } else if (value == 'ringkasan') {
                           // Navigator.push(
                           //     context,
@@ -179,7 +179,8 @@ class _dinas extends State<dinas> {
                               context, item.id.toString(), viewCuti, item);
                         } else if (value == 'batal') {
                           // Handle delete action
-                          cancelAlert(context, item.id.toString());
+                          batalkanAlert(
+                              context, item.id.toString(), viewCuti, item);
                         }
                       },
                       child: Icon(Icons.more_vert,
@@ -334,12 +335,13 @@ Future<void> deleteAlert(
 }
 
 Future<void> batalkanAlert(
-    BuildContext context, id, CutiVM viewCuti, Cuti item) {
+    BuildContext context, id, CutiVM viewCuti, Dinas item) {
   return showDialog<void>(
     context: context,
     builder: (BuildContext context) {
       return AlertDialog(
-        title: const Text('Apakah anda yakin akan membatalkan Cuti ini ?'),
+        title:
+            const Text('Apakah anda yakin akan membatalkan Izin Dinas ini ?'),
         content: const Text(
             'Status pengajuan akan di batalkan dan data tidak akan tampil di list pengajuan'),
         actions: <Widget>[
@@ -358,44 +360,12 @@ Future<void> batalkanAlert(
             ),
             child: const Text('Ya'),
             onPressed: () async {
-              await viewCuti.deletecuti(id).then((value) async {
-                await viewCuti.getdatacuti(
+              await viewCuti.deletedinas(id).then((value) async {
+                await viewCuti.getdatadinas(
                     item.idPegawai.toString(), item.idInstansi.toString());
                 Navigator.pop(context, true);
               });
             },
-          ),
-        ],
-      );
-    },
-  );
-}
-
-Future<void> cancelAlert(BuildContext context, id) {
-  return showDialog<void>(
-    context: context,
-    builder: (BuildContext context) {
-      return AlertDialog(
-        title: const Text(
-            'Apakah anda yakin akan membatalkan pengajuan cuti ini ?'),
-        content:
-            const Text('Pengajuan yang dibatalkan tidak dapat di ajukan ulang'),
-        actions: <Widget>[
-          TextButton(
-            style: TextButton.styleFrom(
-              textStyle: Theme.of(context).textTheme.labelLarge,
-            ),
-            child: const Text('Tidak'),
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-          ),
-          TextButton(
-            style: TextButton.styleFrom(
-              textStyle: Theme.of(context).textTheme.labelLarge,
-            ),
-            child: const Text('Ya'),
-            onPressed: () async {},
           ),
         ],
       );

@@ -10,6 +10,8 @@ class PegawaiVM extends ChangeNotifier {
   final _myRepo = PegawaiRepolpm();
 
   ApiResponse<EmployeeModel> data = ApiResponse.loading();
+  List<Pegawai> _filteredData = [];
+  List<Pegawai> get filteredData => _filteredData;
 
   void _setMain(ApiResponse<EmployeeModel> response) {
     print("$response");
@@ -18,11 +20,16 @@ class PegawaiVM extends ChangeNotifier {
   }
 
   //Login Data
-  Future<void> getdata(String id, String kodeunitkerja) async {
+  Future<void> getdata(String id, String kodeunitkerja, query) async {
     _myRepo
-        .getlistemployee(id, kodeunitkerja)
+        .getlistemployee(id, kodeunitkerja, query)
         .then((value) => _setMain(ApiResponse.completed(value)))
         .onError((error, stackTrace) =>
             _setMain(ApiResponse.error(error.toString())));
+  }
+
+  void setFilteredData(List<Pegawai> newData) {
+    _filteredData = newData;
+    notifyListeners();
   }
 }

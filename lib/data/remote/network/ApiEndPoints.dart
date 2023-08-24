@@ -15,4 +15,8 @@ class ApiEndPoints {
   final String deletedinas = "deletedinas";
   final String updatecutinoimage = "updatecutinoimage";
   final String updatecutiimage = "updatecutiimage";
+  final String updatedinasnoimage = "updatedinasnoimage";
+  final String updatedinasimage = "updatedinasimage";
+  final String detailabsensi = "getabsenbypegawai";
+  final String getoutlocation = "getoutlocation";
 }

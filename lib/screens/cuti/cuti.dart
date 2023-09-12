@@ -1,6 +1,7 @@
 import 'package:absensi/model/login/LoginModel.dart';
 import 'package:absensi/screens/cuti/addcuti.dart';
 import 'package:absensi/screens/cuti/ringkasan.dart';
+import 'package:absensi/screens/cuti/viewsurat.dart';
 import 'package:absensi/view_model/absensi/AbsensiVM.dart';
 import 'package:absensi/view_model/absensi/CutiVM.dart';
 import 'package:flutter/cupertino.dart';
@@ -128,8 +129,8 @@ class _cuti extends State<cuti> {
                           // If status is 'Tahap Verifikasi', hide the items
                           return [
                             PopupMenuItem(
-                              child: Text('Ringkasan'),
-                              value: 'ringkasan',
+                              child: Text('Lihat File'),
+                              value: 'Lihat File',
                             ),
                           ];
                         } else {
@@ -163,13 +164,17 @@ class _cuti extends State<cuti> {
                           } else {
                             await getdata();
                           }
-                        } else if (value == 'ringkasan') {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (BuildContext context) => ringkasan(
-                                      id_pegawai: widget.id_pegawai,
-                                      data_cuti: item)));
+                        } else if (value == 'Lihat File') {
+                          final String link =
+                              'https://absensi.bengkaliskab.go.id/uploads/' +
+                                  item.file!.toString();
+                          var result = await Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (BuildContext context) =>
+                                  viewSurat(link: link),
+                            ),
+                          );
                         } else if (value == 'delete') {
                           // Handle delete action
                           // print('Delete: ' + item.id.toString());

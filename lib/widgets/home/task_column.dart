@@ -54,6 +54,8 @@ class TaskColumn extends StatelessWidget {
       onTap: () {
         if (jenis == 'url') {
           _launchUrl(Uri.parse(url));
+        } else if (jenis == 'googlemaps') {
+          openGoogleMapsRoute(url);
         } else {
           Navigator.push(
             context,
@@ -64,6 +66,14 @@ class TaskColumn extends StatelessWidget {
         }
       },
     );
+  }
+}
+
+Future<void> openGoogleMapsRoute(googleMapsUrl) async {
+  if (await canLaunch(googleMapsUrl)) {
+    await launch(googleMapsUrl);
+  } else {
+    throw 'Could not open the map.';
   }
 }
 

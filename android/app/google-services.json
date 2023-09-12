@@ -1,0 +1,90 @@
+{
+  "project_info": {
+    "project_number": "1019552264881",
+    "project_id": "skponline-5feb5",
+    "storage_bucket": "skponline-5feb5.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1019552264881:android:24807d8433b7b502ee6890",
+        "android_client_info": {
+          "package_name": "id.go.bengkaliskab.absensi"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1019552264881-honniglbsk38va9bur9fkaoj8ou4pesk.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCK3DVxBheHbSJFYYU1d2YbWql44nnao3Y"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1019552264881-honniglbsk38va9bur9fkaoj8ou4pesk.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1019552264881-81o0c4n3jrpp0mpl5rqv181v9chs6gmj.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.absensi"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1019552264881:android:1edc4951808ace16ee6890",
+        "android_client_info": {
+          "package_name": "id.go.bengkaliskab.skp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1019552264881-plffq8v7hb7fpr9patrtnhd9d2f1ufm6.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "id.go.bengkaliskab.skp",
+            "certificate_hash": "9b695f82bdc9a0580b3c9ffb3027485d4604d930"
+          }
+        },
+        {
+          "client_id": "1019552264881-honniglbsk38va9bur9fkaoj8ou4pesk.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCK3DVxBheHbSJFYYU1d2YbWql44nnao3Y"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1019552264881-honniglbsk38va9bur9fkaoj8ou4pesk.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1019552264881-81o0c4n3jrpp0mpl5rqv181v9chs6gmj.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.absensi"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

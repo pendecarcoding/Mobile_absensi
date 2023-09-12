@@ -57,13 +57,41 @@ class AbsensiVM extends ChangeNotifier {
   }
 
   //Login Data
-  Future<void> addabsensi(String id, String latitude, String longitude,
+  Future<bool> addabsensi(String id, String latitude, String longitude,
       String status, String swa, String jenis) async {
-    _myRepo
-        .addabsensi(id, latitude, longitude, status, swa, jenis)
-        .then((value) => _setMain(ApiResponse.completed(value)))
-        .onError((error, stackTrace) =>
-            _setMain(ApiResponse.error(error.toString())));
+    try {
+      _myRepo
+          .addabsensi(id, latitude, longitude, status, swa, jenis)
+          .then((value) => _setMain(ApiResponse.completed(value)))
+          .onError((error, stackTrace) =>
+              _setMain(ApiResponse.error(error.toString())));
+      return true;
+    } catch (e) {
+      // Handle errors and return false
+      return false;
+    }
+  }
+
+  Future<bool> addabsensiluarkantor(
+      String id,
+      String latitude,
+      String longitude,
+      String status,
+      String swa,
+      String jenis,
+      String id_luarkantor) async {
+    try {
+      _myRepo
+          .addabsensiluarkantor(
+              id, latitude, longitude, status, swa, jenis, id_luarkantor)
+          .then((value) => _setMain(ApiResponse.completed(value)))
+          .onError((error, stackTrace) =>
+              _setMain(ApiResponse.error(error.toString())));
+      return true;
+    } catch (e) {
+      // Handle errors and return false
+      return false;
+    }
   }
 
   //Cuti

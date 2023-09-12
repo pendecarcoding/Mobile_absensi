@@ -264,7 +264,7 @@ class _editdinas extends State<editdinas> {
               GestureDetector(
                 onTap: () async {
                   final String link =
-                      'https://absensi.bengkaliskab.go.id/uploads/' +
+                      'https://absensi.bengkaliskab.go.id/uploads/dinas/' +
                           widget.data_dinas.file!.toString();
                   var result = await Navigator.push(
                     context,

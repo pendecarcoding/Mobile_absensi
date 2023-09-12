@@ -8,6 +8,14 @@ import '../../model/absensi/OutLocationModel.dart';
 class AbsensiRepo {
   Future<AbsensiModel?> addabsensi(String id, String latitude, String longitude,
       String status, String swa, String jenis) async {}
+  Future<AbsensiModel?> addabsensiluarkantor(
+      String id,
+      String latitude,
+      String longitude,
+      String status,
+      String swa,
+      String jenis,
+      String id_luarkantor) async {}
   Future<CutiModel?> getcuti(String id, String id_instansi) async {}
   Future<DetailAbsenModel?> detailabsensi(Map<String, String> data) async {}
   Future<OutLocationModel?> getoutlocationrepo(

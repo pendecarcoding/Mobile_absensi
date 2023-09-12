@@ -36,6 +36,36 @@ class AbsensiRepolpm implements AbsensiRepo {
   }
 
   @override
+  Future<AbsensiModel?> addabsensiluarkantor(
+      String id,
+      String latitude,
+      String longitude,
+      String status,
+      String swa,
+      String jenis,
+      String id_luarkantor) async {
+    try {
+      Map<String, String> data = {
+        "id": id,
+        "latitude": latitude,
+        "longitude": longitude,
+        "status": status,
+        "swa": swa,
+        "jenis": jenis,
+        "id_luarkantor": id_luarkantor
+      };
+      dynamic response = await _apiService.postResponse(
+          ApiEndPoints().addabsenluarkantor, data);
+      //print("$response");
+      final jsonData = AbsensiModel.fromJson(response);
+      return jsonData;
+    } catch (e) {
+      throw e;
+      print("MARAJ-E $e}");
+    }
+  }
+
+  @override
   Future<CutiModel?> getcuti(String id, String id_instansi) async {
     try {
       Map<String, String> data = {

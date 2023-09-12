@@ -6,6 +6,7 @@ class ApiEndPoints {
   final String updateaccount = "updateaccount";
   final String updatesandi = "updatesandi";
   final String addabsen = "addabsen";
+  final String addabsenluarkantor = "addabsenluarkantor";
   final String getemployee = "getemployee";
   final String getcuti = "getcuti";
   final String getdinas = "getdinas";

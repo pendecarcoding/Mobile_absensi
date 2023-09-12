@@ -13,9 +13,13 @@ class LoginRepolpm implements LoginRepo {
   BaseApiService _apiService = NetworkApiService();
 
   @override
-  Future<LoginModel?> LoginPost(email, password) async {
+  Future<LoginModel?> LoginPost(email, password, token) async {
     try {
-      Map<String, String> data = {"username": email, "password": password};
+      Map<String, String> data = {
+        "username": email,
+        "password": password,
+        "token": token
+      };
       dynamic response =
           await _apiService.postResponse(ApiEndPoints().Loginpost, data);
       //print("$response");

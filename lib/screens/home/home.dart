@@ -5,7 +5,9 @@ import 'package:absensi/screens/absensi/ambilabsen.dart';
 import 'package:absensi/screens/absensi/luardinas.dart';
 import 'package:absensi/screens/datapegawai/datapegawai.dart';
 import 'package:absensi/screens/widget/nointernet.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_session_manager/flutter_session_manager.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import '../../data/remote/response/Status.dart';
@@ -24,6 +26,10 @@ import '../login/login.dart';
 import '../profil/profil.dart';
 import '../widget/LoadingWidget.dart';
 import '../widget/MyErrorWidget.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:trust_location/trust_location.dart';
 
 class home extends StatefulWidget {
   const home({Key? key}) : super(key: key);
@@ -37,8 +43,17 @@ class _home extends State<home> {
   final LoginVM viewModel = LoginVM();
   final PegawaiVM viewpegawai = PegawaiVM();
   late DateFormat dateFormat;
+  double currentlatitude = 0.0;
+  double currentlongitude = 0.0;
+  double locationlatitude = 0.0;
+  double locationlongitude = 0.0;
+  final storage = FlutterSecureStorage();
+
+  // Get the FCM token
+
   Timer? timer;
   String? nama = '';
+  bool? _isMockLocation;
 
   get width => null;
   @override
@@ -46,8 +61,80 @@ class _home extends State<home> {
     initializeDateFormatting();
     dateFormat = new DateFormat('EEEE, d MMMM yyyy', 'id');
     getdata();
-    timer?.cancel();
+    TrustLocation.start(5);
+    _getCurrentLocation();
+    //
+
     super.initState();
+  }
+
+  void _fakeGPS(BuildContext context) {
+    showDialog<void>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('PERHATIAN !!!'),
+          content: Text(
+            'Tampaknya anda menggunakan GPS palsu. saat menggunakan GPS palsu anda tidak akan dapat melakukan Absensi',
+          ),
+          actions: <Widget>[
+            TextButton(
+              style: TextButton.styleFrom(
+                textStyle: Theme.of(context).textTheme.labelLarge,
+              ),
+              child: const Text('Mengerti'),
+              onPressed: () {
+                SystemNavigator.pop(); // Menutup aplikasi
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<void> _checkGPSOrigin() async {
+    final originalLatitude = await storage.read(key: 'originalLatitude');
+    final originalLongitude = await storage.read(key: 'originalLongitude');
+
+    if (originalLatitude != null && originalLongitude != null) {
+      _fakeGPS(context);
+    } else {
+      // Store the current GPS data as original GPS data
+      await storage.write(
+        key: 'originalLatitude',
+        value: currentlatitude.toString(),
+      );
+      await storage.write(
+        key: 'originalLongitude',
+        value: currentlongitude.toString(),
+      );
+    }
+  }
+
+  _getCurrentLocation() async {
+    LocationPermission permission = await Geolocator.checkPermission();
+
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        // Handle the case where the user denies permission
+        return;
+      }
+    }
+
+    try {
+      TrustLocation.onChange.listen((values) => setState(() {
+            currentlatitude = double.parse(values.latitude!);
+            currentlongitude = double.parse(values.longitude!);
+            _isMockLocation = values.isMockLocation;
+            if (_isMockLocation!) {
+              _fakeGPS(context);
+            }
+          }));
+    } on PlatformException catch (e) {
+      print('PlatformException $e');
+    }
   }
 
   getdata() async {
@@ -167,6 +254,8 @@ class _home extends State<home> {
   }
 
   Widget getDataHome(Data data, Kantor kantor, String? bisaabsen, Jam jam) {
+    double kantorlatitude = double.parse(kantor.latitude.toString());
+    double kantorlongitude = double.parse(kantor.longitude.toString());
     return SingleChildScrollView(
         child: Container(
             child: Column(
@@ -380,11 +469,9 @@ class _home extends State<home> {
               ),
               TaskColumn(
                 widget: home(),
-                jenis: "url",
-                url: 'https://www.google.com/maps/search/?api=1&query=' +
-                    kantor.latitude! +
-                    ',' +
-                    kantor.longitude!,
+                jenis: "googlemaps",
+                url:
+                    "https://www.google.com/maps/dir/?api=1&origin=$currentlatitude,$currentlongitude&destination=$kantorlatitude,$kantorlongitude&travelmode=driving",
                 icon: Icons.maps_home_work_sharp,
                 iconBackgroundColor: LightColors.kDarkYellow,
                 title: 'Lokasi Kantor',

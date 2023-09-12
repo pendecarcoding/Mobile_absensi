@@ -1,4 +1,5 @@
 import 'package:absensi/theme/colors/light_colors.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_session_manager/flutter_session_manager.dart';
@@ -21,6 +22,8 @@ class _login extends State<login> {
   String? nip, password;
   final _key = new GlobalKey<FormState>();
   final LoginVM viewModel = LoginVM();
+  FirebaseMessaging messaging = FirebaseMessaging.instance;
+
   check() {
     /*Navigator.pushReplacement(
         context, MaterialPageRoute(builder: (BuildContext context) => home()));
@@ -33,7 +36,9 @@ class _login extends State<login> {
   }
 
   login() async {
-    var data = await viewModel.actlogin(nip!, password!);
+    String? fcmToken = await messaging.getToken();
+    print('FCM Token: $fcmToken');
+    var data = await viewModel.actlogin(nip!, password!, fcmToken!);
     switch (viewModel.login.status) {
       case Status.ERROR:
         ScaffoldMessenger.of(context).showSnackBar(

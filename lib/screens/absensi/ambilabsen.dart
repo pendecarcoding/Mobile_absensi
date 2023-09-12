@@ -5,8 +5,10 @@ import 'dart:io';
 import 'dart:math';
 
 import 'package:absensi/model/login/LoginModel.dart';
+import 'package:absensi/screens/absensi/detailabsensi.dart';
 import 'package:absensi/screens/home/home.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_session_manager/flutter_session_manager.dart';
 import 'package:provider/provider.dart';
 
@@ -27,6 +29,8 @@ import '../widget/LoadingWidget.dart';
 import '../widget/MyErrorWidget.dart';
 import 'package:back_pressed/back_pressed.dart';
 import 'package:vibration/vibration.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:trust_location/trust_location.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -50,6 +54,10 @@ class _ambilabsen extends State<ambilabsen> {
   String jenis = '';
   final LoginVM viewModel = LoginVM();
   final AbsensiVM absensiModel = AbsensiVM();
+  final storage = FlutterSecureStorage();
+  double currentlatitude = 0.0;
+  double currentlongitude = 0.0;
+  bool? _isMockLocation;
   @override
   void dispose() {
     timer
@@ -64,6 +72,50 @@ class _ambilabsen extends State<ambilabsen> {
     super.initState();
     getUserCurrentLocation();
     getdata();
+    _checkGPSOrigin();
+  }
+
+  void _fakeGPS(BuildContext context) {
+    showDialog<void>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('PERHATIAN !!!'),
+          content: Text(
+            'Tampaknya anda menggunakan GPS palsu. saat menggunakan GPS palsu anda tidak akan dapat melakukan Absensi',
+          ),
+          actions: <Widget>[
+            TextButton(
+              style: TextButton.styleFrom(
+                textStyle: Theme.of(context).textTheme.labelLarge,
+              ),
+              child: const Text('Mengerti'),
+              onPressed: () {
+                SystemNavigator.pop(); // Menutup aplikasi
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<void> _checkGPSOrigin() async {
+    final originalLatitude = await storage.read(key: 'originalLatitude');
+    final originalLongitude = await storage.read(key: 'originalLongitude');
+
+    try {
+      TrustLocation.onChange.listen((values) => setState(() {
+            currentlatitude = double.parse(values.latitude!);
+            currentlongitude = double.parse(values.longitude!);
+            _isMockLocation = values.isMockLocation;
+            if (_isMockLocation!) {
+              _fakeGPS(context);
+            }
+          }));
+    } on PlatformException catch (e) {
+      print('PlatformException $e');
+    }
   }
 
   @override
@@ -203,8 +255,31 @@ class _ambilabsen extends State<ambilabsen> {
       "data:image/png;base64," + img64,
       jenis,
     )
-        .then((value) {
-      print("MOGA MASUK");
+        .then((success) {
+      if (success) {
+        print("MOGA MASUK");
+        _showSuccessSnackbar();
+      } else {
+        print("Operation failed");
+        // Handle failure
+      }
+    });
+  }
+
+  void _showSuccessSnackbar() {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('Data sent successfully'),
+        duration: Duration(seconds: 2),
+      ),
+    );
+
+    Future.delayed(Duration(seconds: 2), () {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+            builder: (context) => home()), // Replace with your desired activity
+      );
     });
   }
 
@@ -308,6 +383,30 @@ class _ambilabsen extends State<ambilabsen> {
         margin: EdgeInsets.only(top: 2),
         child: ListTile(
           title: Text(item.tglabsen.toString()),
+          trailing: PopupMenuButton(
+            itemBuilder: (BuildContext context) {
+              return [
+                PopupMenuItem(
+                  child: Text('Lihat Absensi'),
+                  value: 'lihat',
+                ),
+              ];
+            },
+            onSelected: (value) async {
+              if (value == 'lihat') {
+                // // Handle edit action
+
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (BuildContext context) => detailabsensi(item),
+                  ),
+                );
+              }
+            },
+            child:
+                Icon(Icons.more_vert, color: Color.fromARGB(255, 99, 99, 99)),
+          ),
           subtitle: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,

@@ -66,8 +66,10 @@ class _detailpegawai extends State<detailpegawai> {
   getdata(Map<String, String> data) async {
     try {
       await absensi.detailabsensi(data);
-      print(data);
-    } catch (e) {}
+      print("data Hasil ${data}");
+    } catch (e) {
+      return Text("Data tidak tersedia");
+    }
   }
 
   @override
@@ -239,7 +241,13 @@ class _detailpegawai extends State<detailpegawai> {
                     case Status.ERROR:
                       return MyErrorWidget(absensi.absen.message ?? "NA");
                     case Status.COMPLETED:
-                      return _widgetbody(absensi.absen.data);
+                      if (absensi.absen!.data != null) {
+                        print("DATAA : ${absensi.absen.data}");
+                        return _widgetbody(absensi.absen.data);
+                      } else {
+                        return Text("Akun Belum dibuat");
+                      }
+
                     default:
                   }
                   return Container();
@@ -249,7 +257,7 @@ class _detailpegawai extends State<detailpegawai> {
   }
 
   Widget _widgetbody([DetailAbsenModel? data]) {
-    if (data != null) {
+    if (data!.waktuabsen.toString() != '') {
       return ListTile(
         title: Text("Kehadiran: ${data.status}"),
         subtitle: Column(
@@ -267,7 +275,10 @@ class _detailpegawai extends State<detailpegawai> {
         ),
       );
     } else {
-      return Text("Belum melakukan absensi");
+      return ListTile(
+        title: Text("Data tidak tersedia"),
+        subtitle: Text("Pagawai Belum melakukan absen di tanggal ini"),
+      );
     }
   }
 }

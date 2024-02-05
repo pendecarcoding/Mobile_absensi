@@ -64,6 +64,7 @@ class _home extends State<home> {
     TrustLocation.start(5);
     _getCurrentLocation();
     //
+    timer?.cancel();
 
     super.initState();
   }
@@ -575,7 +576,8 @@ class _home extends State<home> {
                     Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(
-                            builder: (BuildContext context) => ambilabsen()));
+                            builder: (BuildContext context) => ambilabsen(
+                                kantor: viewModel.login.data!.kantor!)));
                   },
                   trailing: Icon(
                     Icons.arrow_forward_ios,

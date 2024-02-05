@@ -81,9 +81,17 @@ class _addcuti extends State<addcuti> {
     */
     final form = _key.currentState;
     if (form!.validate()) {
-      form.save();
-      handleClick();
-      addactcuti();
+      if (filePath!.isNotEmpty) {
+        form.save();
+        handleClick();
+        addactcuti();
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Please choose a PDF file.'),
+          ),
+        );
+      }
     }
   }
 
@@ -329,7 +337,19 @@ class _addcuti extends State<addcuti> {
                     ],
                   ),
                   onPressed: () {
-                    check();
+                    if (filePath != null) {
+                      // Perform the action when a file is chosen
+                      // For example, you can call a function or navigate to another screen
+                      // Your existing function: pickPDFFile();
+                      check();
+                    } else {
+                      // Show a snackbar to inform the user to choose a file
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text('Please choose a PDF file.'),
+                        ),
+                      );
+                    }
                   }, // Disable the button when loading
                 ),
               ),

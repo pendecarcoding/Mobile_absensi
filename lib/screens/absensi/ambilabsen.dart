@@ -39,6 +39,8 @@ Future<void> main() async {
 }
 
 class ambilabsen extends StatefulWidget {
+  final kantor;
+  const ambilabsen({super.key, required this.kantor});
   @override
   State<ambilabsen> createState() => _ambilabsen();
 }
@@ -58,21 +60,30 @@ class _ambilabsen extends State<ambilabsen> {
   double currentlatitude = 0.0;
   double currentlongitude = 0.0;
   bool? _isMockLocation;
-  @override
-  void dispose() {
-    timer
-        ?.cancel(); // Cancel the timer to prevent calling setState after dispose
-    geofenceStatusStream
-        ?.cancel(); // Also cancel the geofenceStatusStream if necessary
-    super.dispose();
-  }
+  bool _isMounted = false;
 
   @override
   void initState() {
     super.initState();
+    _isMounted = true;
     getUserCurrentLocation();
     getdata();
     _checkGPSOrigin();
+    getUserCurrentLocation();
+    startGeofencing(widget.kantor);
+    // timer = Timer.periodic(
+    //   Duration(seconds: 30),
+    //   (Timer t) => getdistance(widget.kantor),
+    // );
+  }
+
+  @override
+  void dispose() {
+    _isMounted = false;
+    geofenceStatusStream?.cancel();
+    EasyGeofencing.stopGeofenceService();
+    EasyGeofencing.getGeofenceStream()!.timeout(Duration(seconds: 1));
+    super.dispose();
   }
 
   void _fakeGPS(BuildContext context) {
@@ -176,6 +187,11 @@ class _ambilabsen extends State<ambilabsen> {
           currentLat = value.latitude.toString();
           currentLong = value.longitude.toString();
           distance = totalDistance;
+          if (distance < 0.5) {
+            geofenceStatus = "VALID";
+          } else {
+            geofenceStatus = "INVALID";
+          }
           checkStatus();
         });
       });
@@ -184,6 +200,20 @@ class _ambilabsen extends State<ambilabsen> {
 
   void checkStatus() {
     if (geofenceStatusStream == null) {
+      geofenceStatusStream = EasyGeofencing.getGeofenceStream()!.listen(
+        (GeofenceStatus status) {
+          print("GEOFENCE " + status.toString());
+          setState(() {
+            if (status.toString() == "GeofenceStatus.enter") {
+              geofenceStatus = "VALID";
+            } else {
+              geofenceStatus = "INVALID";
+              _vibratePhone();
+            }
+          });
+        },
+      );
+    } else {
       geofenceStatusStream = EasyGeofencing.getGeofenceStream()!.listen(
         (GeofenceStatus status) {
           print("GEOFENCE " + status.toString());
@@ -210,13 +240,18 @@ class _ambilabsen extends State<ambilabsen> {
     }
   }
 
-  void startGeofencing(Kantor kantor) {
-    EasyGeofencing.startGeofenceService(
-      pointedLatitude: kantor.latitude!,
-      pointedLongitude: kantor.longitude!,
-      radiusMeter: kantor.radius.toString(),
-      eventPeriodInSeconds: 1,
-    );
+  void startGeofencing(Kantor kantor) async {
+    try {
+      await EasyGeofencing.startGeofenceService(
+        pointedLatitude: kantor.latitude!,
+        pointedLongitude: kantor.longitude!,
+        radiusMeter: kantor.radius.toString(),
+        eventPeriodInSeconds: 1,
+      );
+    } catch (e) {
+      // Handle any errors
+      print('Error starting geofencing: $e');
+    }
   }
 
   void openCamera(BuildContext context) async {
@@ -430,12 +465,11 @@ class _ambilabsen extends State<ambilabsen> {
   }
 
   Widget _buildData(Kantor kantor, Data pegawai, Jam jam) {
-    getUserCurrentLocation();
-    timer = Timer.periodic(
-      Duration(seconds: 2),
-      (Timer t) => getdistance(kantor),
-    );
-    startGeofencing(kantor);
+    // timer = Timer.periodic(
+    //   Duration(seconds: 30),
+    //   (Timer t) => getdistance(widget.kantor),
+    // );
+    getdistance(kantor);
     double latitudekantor = double.parse(kantor.latitude.toString());
     double longitudekantor = double.parse(kantor.longitude.toString());
     String namaunitkerja = kantor.namaunitkerja.toString();

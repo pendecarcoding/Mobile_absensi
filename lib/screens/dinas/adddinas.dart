@@ -304,7 +304,19 @@ class _adddinas extends State<adddinas> {
                     ],
                   ),
                   onPressed: () {
-                    check();
+                    if (filePath != null) {
+                      // Perform the action when a file is chosen
+                      // For example, you can call a function or navigate to another screen
+                      // Your existing function: pickPDFFile();
+                      check();
+                    } else {
+                      // Show a snackbar to inform the user to choose a file
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text('Please choose a PDF file.'),
+                        ),
+                      );
+                    }
                   }, // Disable the button when loading
                 ),
               ),

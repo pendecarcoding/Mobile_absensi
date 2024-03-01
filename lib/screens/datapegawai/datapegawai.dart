@@ -112,9 +112,17 @@ class _datapegawai extends State<datapegawai> {
               case Status.ERROR:
                 return MyErrorWidget(viewpegawai.data.message ?? "NA");
               case Status.COMPLETED:
-                Listpegawai = viewpegawai.data.data!.data!;
+                
+                if(viewpegawai.data.data!.data!.isNotEmpty){
+                    Listpegawai = viewpegawai.data.data!.data!;
+                    return _widgetbody(Listpegawai);
+                }else{
+                    return Center(
+                      child: Text("Data tidak di temukan"),
+                    );
+                }
 
-                return _widgetbody(Listpegawai);
+                
 
               default:
                 return Container();
@@ -153,7 +161,6 @@ class _datapegawai extends State<datapegawai> {
       child: Card(
           margin: EdgeInsets.only(top: 2),
           child: Container(
-              height: 80,
               child: Ink(
                 color: Colors.transparent,
                 child: ListTile(

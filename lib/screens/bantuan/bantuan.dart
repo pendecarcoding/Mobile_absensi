@@ -24,6 +24,7 @@ class _bantuan extends State<bantuan> {
     return Scaffold(
       appBar: AppBar(
         title: Text("Chat Layanan"),
+        foregroundColor: Colors.white,
         backgroundColor: LightColors.primary,
       ),
       body: WebView(

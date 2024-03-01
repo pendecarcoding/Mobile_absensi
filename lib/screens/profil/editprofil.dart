@@ -178,6 +178,7 @@ class _Eprofil extends State<editprofil> {
           appBar: AppBar(
             title: Text("Pengaturan Profil"),
             backgroundColor: LightColors.primary,
+            foregroundColor: Colors.white,
           ),
           body: ListView(
             padding: EdgeInsets.symmetric(horizontal: 32, vertical: 30),

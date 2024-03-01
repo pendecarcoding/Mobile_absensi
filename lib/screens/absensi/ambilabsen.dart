@@ -624,6 +624,7 @@ class _ambilabsen extends State<ambilabsen> {
       appBar: AppBar(
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
+          color: Colors.white,
           onPressed: () {
             // Any action you want to perform before going back to the parent activity
 
@@ -636,6 +637,7 @@ class _ambilabsen extends State<ambilabsen> {
         ),
         title: Text("Ambil Absen"),
         backgroundColor: LightColors.primary,
+        foregroundColor: Colors.white,
       ),
       body: ChangeNotifierProvider<LoginVM>(
         create: (BuildContext context) => viewModel,

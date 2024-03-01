@@ -65,6 +65,7 @@ class _dinas extends State<dinas> {
       appBar: AppBar(
         title: Text("Pengajuan Izin Dinas"),
         backgroundColor: LightColors.primary,
+        foregroundColor: Colors.white,
       ),
       body: ChangeNotifierProvider<CutiVM>(
           create: (BuildContext context) => viewCuti,
@@ -82,6 +83,7 @@ class _dinas extends State<dinas> {
           })),
       floatingActionButton: FloatingActionButton(
         backgroundColor: LightColors.primary,
+        foregroundColor: Colors.white,
         onPressed: () async {
           // Navigate to the addcuti activity and wait for the result
           var result = await Navigator.push(

@@ -22,6 +22,7 @@ class _detailabsensi extends State<detailabsensi> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: LightColors.primary,
+        foregroundColor: Colors.white,
         title: Text("Detail Absensi"),
       ),
       body: SingleChildScrollView(

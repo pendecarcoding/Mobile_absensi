@@ -72,6 +72,7 @@ class _ringkasandinas extends State<ringkasandinas> {
           appBar: AppBar(
             title: Text("Form Edit Cuti"),
             backgroundColor: LightColors.primary,
+            foregroundColor: Colors.white,
           ),
           body: Column(
             mainAxisSize: MainAxisSize.min,

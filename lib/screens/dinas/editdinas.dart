@@ -179,6 +179,7 @@ class _editdinas extends State<editdinas> {
           appBar: AppBar(
             title: Text("Form Edit Dinas"),
             backgroundColor: LightColors.primary,
+            foregroundColor: Colors.white,
           ),
           body: ListView(
             padding: EdgeInsets.symmetric(horizontal: 32, vertical: 30),

@@ -9,7 +9,7 @@ import '../../view_model/absensi/CutiVM.dart';
 import '../widget/textfield_widget.dart';
 import 'package:intl/intl.dart';
 import 'package:file_picker/file_picker.dart';
-
+import 'package:permission_handler/permission_handler.dart';
 class adddinas extends StatefulWidget {
   /*final kantor;
   final pegawai;
@@ -107,7 +107,12 @@ class _adddinas extends State<adddinas> {
     }
   }
 
-  Future<void> pickPDFFile() async {
+Future<void> pickPDFFile() async {
+  // Check if permission is granted
+  await Permission.storage.status;
+  var status = await Permission.storage.status;
+  if (status.isGranted) {
+    // Permission is already granted, proceed with file picking
     try {
       FilePickerResult? result = await FilePicker.platform.pickFiles(
         type: FileType.custom,
@@ -120,9 +125,54 @@ class _adddinas extends State<adddinas> {
         });
       }
     } catch (e) {
-      // Handle error...
+        print(e);
+    }
+  } else if (status.isDenied || status.isRestricted || status.isPermanentlyDenied) {
+    // Permission is denied or restricted, request permission
+    var requestStatus = await Permission.storage.request();
+    if (requestStatus.isGranted) {
+      // Permission granted, proceed with file picking
+      try {
+        FilePickerResult? result = await FilePicker.platform.pickFiles(
+          type: FileType.custom,
+          allowedExtensions: ['pdf'],
+        );
+
+        if (result != null) {
+          setState(() {
+            filePath = result.files.single.path!;
+          });
+        }
+      } catch (e) {
+        print(e);
+      }
+    } else {
+      // Permission denied, show a message or handle it accordingly
+      // For example, you can show a SnackBar or AlertDialog informing the user
+      // that the permission is required to pick a PDF file.
+      // ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      //   content: Text('Permission denied to pick PDF file.'),
+      // ));
+      // Or show an AlertDialog
+      await Permission.storage.status;
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text('Permission Denied'),
+          content: Text('Permission is required to pick PDF files.'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('OK'),
+            ),
+          ],
+        ),
+      );
     }
   }
+}
 
   Future _selectDate(BuildContext context, bool isFromDate) async {
     final DateTime? pickedDate = await showDatePicker(
@@ -161,6 +211,7 @@ class _adddinas extends State<adddinas> {
           appBar: AppBar(
             title: Text("Form Pengajuan Dinas"),
             backgroundColor: LightColors.primary,
+            foregroundColor: Colors.white,
           ),
           body: ListView(
             padding: EdgeInsets.symmetric(horizontal: 32, vertical: 30),
@@ -313,7 +364,7 @@ class _adddinas extends State<adddinas> {
                       // Show a snackbar to inform the user to choose a file
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
-                          content: Text('Please choose a PDF file.'),
+                          content: Text('Mohon untuk menyertakan file PDF'),
                         ),
                       );
                     }

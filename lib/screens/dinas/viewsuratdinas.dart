@@ -92,6 +92,7 @@ class _ViewSuratState extends State<viewSuratdinas> {
           ),
         ],
         backgroundColor: LightColors.primary,
+        foregroundColor: Colors.white,
         title: Text(
           "SURAT PERINTAH TUGAS",
           style: TextStyle(fontWeight: FontWeight.bold),

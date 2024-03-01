@@ -88,7 +88,7 @@ class _addcuti extends State<addcuti> {
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Please choose a PDF file.'),
+            content: Text('Mohon untuk menyertakan file PDF'),
           ),
         );
       }
@@ -170,6 +170,7 @@ class _addcuti extends State<addcuti> {
           appBar: AppBar(
             title: Text("Form Cuti"),
             backgroundColor: LightColors.primary,
+            foregroundColor: Colors.white,
           ),
           body: ListView(
             padding: EdgeInsets.symmetric(horizontal: 32, vertical: 30),
@@ -346,7 +347,7 @@ class _addcuti extends State<addcuti> {
                       // Show a snackbar to inform the user to choose a file
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
-                          content: Text('Please choose a PDF file.'),
+                          content: Text('Mohon untuk menyertakan file PDF'),
                         ),
                       );
                     }

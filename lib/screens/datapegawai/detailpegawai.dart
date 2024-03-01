@@ -139,11 +139,12 @@ class _detailpegawai extends State<detailpegawai> {
                       ),
                       backgroundColor: Colors.transparent,
                     ),
-                    height: 45,
+                    
                     width: 50,
                   ),
                 ),
-                Container(
+                 Expanded(
+                child:Container(
                   margin: EdgeInsets.all(5),
                   width: MediaQuery.of(context).size.width *
                       0.5, // Adjust as needed
@@ -155,7 +156,7 @@ class _detailpegawai extends State<detailpegawai> {
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                   ),
-                )
+                ))
               ],
             ),
           ),

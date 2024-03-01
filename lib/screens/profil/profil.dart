@@ -2,6 +2,7 @@ import 'package:absensi/model/login/LoginModel.dart';
 import 'package:absensi/screens/bantuan/bantuan.dart';
 import 'package:absensi/screens/profil/editprofil.dart';
 import 'package:absensi/screens/profil/ubahkatasandi.dart';
+import 'package:absensi/screens/widget/profile_widget_nocam.dart';
 import 'package:absensi/screens/widget/textfield_widget.dart';
 import 'package:absensi/theme/colors/light_colors.dart';
 import 'package:animated_theme_switcher/animated_theme_switcher.dart';
@@ -59,6 +60,7 @@ class _profil extends State<profil> {
           title: Text("Pengaturan"),
           elevation: 0,
           backgroundColor: LightColors.primary,
+          foregroundColor: Colors.white,
         ),
         body: SingleChildScrollView(
           child: Column(
@@ -81,7 +83,7 @@ class _profil extends State<profil> {
                       left: 0,
                       height: 130,
                       width: MediaQuery.of(context).size.width,
-                      child: ProfileWidget(
+                      child: ProfileWidgetNoCam(
                         imagePath:
                             "https://absensi.bengkaliskab.go.id/pegawai/" +
                                 widget.data_peg.kodeUnitkerja! +
@@ -176,10 +178,14 @@ class _profil extends State<profil> {
                   )),
                   Card(
                       child: ListTile(
-                    leading: Icon(Icons.location_on),
-                    title: Text('Enable Location'),
+                    leading: Icon(Icons.location_on,color: LightColors.primary,),
+                    title: Text('Aktifkan Lokasi',style: TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 17),
+                      ),
                     trailing: Switch(
                       value: _serviceEnabled,
+                      
+                      activeColor: Colors.orange,
                       onChanged: (bool value) async {
                         setState(() {
                           _serviceEnabled = value;

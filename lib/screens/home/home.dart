@@ -199,6 +199,7 @@ class _home extends State<home> {
           elevation: 0,
           actions: <Widget>[
             IconButton(
+              color: Colors.white,
               icon: const Icon(Icons.qr_code),
               tooltip: 'Absen Luar Kantor',
               onPressed: () {
@@ -210,6 +211,7 @@ class _home extends State<home> {
             ),
             IconButton(
               icon: const Icon(Icons.message),
+              color: Colors.white,
               tooltip: 'Message',
               onPressed: () {
                 Navigator.push(
@@ -219,6 +221,7 @@ class _home extends State<home> {
               },
             ),
             IconButton(
+              color: Colors.white,
               icon: const Icon(Icons.logout),
               tooltip: 'Logout',
               onPressed: () {
@@ -387,8 +390,8 @@ class _home extends State<home> {
                               children: [
                                 Center(
                                   child: Text(
-                                      // (jam.jam! != null) ? jam.jam! :
-                                      (bisaabsen != 'no') ? jam.jam! : "--:--",
+                                      (jam.jam! != null) ? jam.jam! : "--:--",
+                                      //(bisaabsen != 'no') ? jam.jam! : "--:--",
                                       style: TextStyle(
                                           fontSize: 30,
                                           fontWeight: FontWeight.bold)),
@@ -416,9 +419,10 @@ class _home extends State<home> {
                               children: [
                                 Center(
                                   child: Text(
-                                      (bisaabsen != 'no')
-                                          ? jam.batas!
-                                          : "--:--",
+                                      // (bisaabsen != 'no')
+                                      //     ? jam.batas!
+                                      //     : "--:--",
+                                          (jam.batas! != null) ? jam.batas! : "--:--",
                                       style: TextStyle(
                                           fontSize: 30,
                                           fontWeight: FontWeight.bold)),
@@ -573,7 +577,7 @@ class _home extends State<home> {
               Card(
                 child: ListTile(
                   onTap: () {
-                    Navigator.pushReplacement(
+                    Navigator.push(
                         context,
                         MaterialPageRoute(
                             builder: (BuildContext context) => ambilabsen(

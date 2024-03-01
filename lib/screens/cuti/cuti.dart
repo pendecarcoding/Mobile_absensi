@@ -62,8 +62,11 @@ class _cuti extends State<cuti> {
     return Scaffold(
       appBar: AppBar(
         title: Text("Pengajuan Cuti"),
+        
         backgroundColor: LightColors.primary,
+        foregroundColor: Colors.white,
       ),
+      
       body: ChangeNotifierProvider<CutiVM>(
           create: (BuildContext context) => viewCuti,
           child: Consumer<CutiVM>(builder: (context, viewCuti, _) {
@@ -79,7 +82,9 @@ class _cuti extends State<cuti> {
             return Container();
           })),
       floatingActionButton: FloatingActionButton(
+        foregroundColor: Colors.white,
         backgroundColor: LightColors.primary,
+        
         onPressed: () async {
           // Navigate to the addcuti activity and wait for the result
           var result = await Navigator.push(

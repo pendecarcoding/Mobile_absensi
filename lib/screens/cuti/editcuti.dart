@@ -182,6 +182,7 @@ class _editcuti extends State<editcuti> {
           appBar: AppBar(
             title: Text("Form Edit Cuti"),
             backgroundColor: LightColors.primary,
+            foregroundColor: Colors.white,
           ),
           body: ListView(
             padding: EdgeInsets.symmetric(horizontal: 32, vertical: 30),

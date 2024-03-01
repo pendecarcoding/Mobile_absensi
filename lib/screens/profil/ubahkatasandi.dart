@@ -82,6 +82,7 @@ class _ubahsandi extends State<ubahsandi> {
           appBar: AppBar(
             title: Text("Pengaturan Profil"),
             backgroundColor: LightColors.primary,
+            foregroundColor: Colors.white,
           ),
           body: ListView(
             padding: EdgeInsets.symmetric(horizontal: 32, vertical: 30),

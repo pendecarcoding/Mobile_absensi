@@ -4,6 +4,7 @@ import 'package:absensi/model/login/LoginModel.dart';
 import 'package:absensi/screens/absensi/ambilabsen.dart';
 import 'package:absensi/screens/absensi/luardinas.dart';
 import 'package:absensi/screens/datapegawai/datapegawai.dart';
+import 'package:absensi/screens/webview/ekinerja.dart';
 import 'package:absensi/screens/widget/nointernet.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
@@ -494,6 +495,15 @@ class _home extends State<home> {
                 subtitle: 'lihat daftar Pegawai Kantor',
               ),
               SizedBox(height: 15.0),
+              TaskColumn(
+                widget: ekinerja(),
+                jenis: 'route',
+                url: '',
+                icon: Icons.laptop,
+                iconBackgroundColor: Color.fromARGB(255, 224, 49, 130),
+                title: 'E-KINERJA',
+                subtitle: 'Aplikasi E-Kinerja BKN',
+              ),
               // TaskColumn(
               //   widget: datapegawai(
               //       kodeunitkerja: viewModel.login.data!.data!.kodeUnitkerja!),

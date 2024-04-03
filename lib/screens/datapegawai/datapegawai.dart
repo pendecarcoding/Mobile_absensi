@@ -186,7 +186,7 @@ class _datapegawai extends State<datapegawai> {
                       margin: EdgeInsets.only(top: 10),
                       child: Text(
                         ((item.gd! == "-") ? "" : item.gd!) +
-                            item.nama! +
+                            item.nama! +' '+
                             item.gb!,
                         style: TextStyle(
                             fontWeight: FontWeight.bold, fontSize: 18),

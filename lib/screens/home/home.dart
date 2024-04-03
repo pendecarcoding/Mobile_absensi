@@ -49,6 +49,7 @@ class _home extends State<home> {
   double locationlatitude = 0.0;
   double locationlongitude = 0.0;
   final storage = FlutterSecureStorage();
+  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
 
   // Get the FCM token
 
@@ -66,8 +67,13 @@ class _home extends State<home> {
     _getCurrentLocation();
     //
     timer?.cancel();
-
+    _subscribeToTopic();
     super.initState();
+  }
+
+  void _subscribeToTopic() {
+    _firebaseMessaging.subscribeToTopic('NOTIFPEGAWAI');
+    print('Subscribed to topic!');
   }
 
   void _fakeGPS(BuildContext context) {
@@ -382,63 +388,72 @@ class _home extends State<home> {
                           color: Color.fromARGB(255, 96, 96, 96)),
                     )),
                   ),
-                  IntrinsicHeight(
-                    child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          Container(
-                            child: Column(
-                              children: [
-                                Center(
-                                  child: Text(
-                                      (jam.jam! != null) ? jam.jam! : "--:--",
-                                      //(bisaabsen != 'no') ? jam.jam! : "--:--",
-                                      style: TextStyle(
-                                          fontSize: 30,
-                                          fontWeight: FontWeight.bold)),
-                                ),
-                                Center(
-                                  child: Text(
-                                    "MULAI",
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.grey),
-                                  ),
-                                )
-                              ],
-                            ),
-                          ),
-                          VerticalDivider(
-                            color: LightColors.kRed, //color of divider
-                            width: 10, //width space of divider
-                            thickness: 3, //thickness of divier line
-                            indent: 10, //Spacing at the top of divider.
-                            endIndent: 10, //Spacing at the bottom of divider.
-                          ),
-                          Container(
-                            child: Column(
-                              children: [
-                                Center(
-                                  child: Text(
-                                      // (bisaabsen != 'no')
-                                      //     ? jam.batas!
-                                      //     : "--:--",
-                                          (jam.batas! != null) ? jam.batas! : "--:--",
-                                      style: TextStyle(
-                                          fontSize: 30,
-                                          fontWeight: FontWeight.bold)),
-                                ),
-                                Center(
-                                  child: Text("AKHIR",
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          color: Colors.grey)),
-                                )
-                              ],
-                            ),
-                          )
-                        ]),
-                  )
+                  Expanded(
+  flex: 1, // You can adjust the flex value as per your layout needs
+  child: IntrinsicHeight(
+    child: Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: [
+        Container(
+          child: Column(
+            children: [
+              Center(
+                child: Text(
+                  (jam.jam! != null) ? jam.jam! : "--:--",
+                  style: TextStyle(
+                    fontSize: 30,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              Center(
+                child: Text(
+                  "MULAI",
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: Colors.grey,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+        VerticalDivider(
+          color: LightColors.kRed, //color of divider
+          width: 10, //width space of divider
+          thickness: 3, //thickness of divier line
+          indent: 10, //Spacing at the top of divider.
+          endIndent: 10, //Spacing at the bottom of divider.
+        ),
+        Container(
+          child: Column(
+            children: [
+              Center(
+                child: Text(
+                  (jam.batas! != null) ? jam.batas! : "--:--",
+                  style: TextStyle(
+                    fontSize: 30,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              Center(
+                child: Text(
+                  "AKHIR",
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: Colors.grey,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    ),
+  ),
+)
+
                 ]),
               ),
             ),

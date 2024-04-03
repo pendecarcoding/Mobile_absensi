@@ -63,7 +63,7 @@ class Nointernet extends StatelessWidget {
                 textStyle: const TextStyle(color: Colors.white),
                 backgroundColor: LightColors.primary,
               ),
-              child: const Text('Coba Kembali'),
+              child: const Text('Coba Kembali',selectionColor: Colors.white,),
             ),
           )
         ],

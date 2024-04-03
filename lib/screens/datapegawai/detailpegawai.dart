@@ -150,7 +150,7 @@ class _detailpegawai extends State<detailpegawai> {
                       0.5, // Adjust as needed
                   child: Text(
                     ((widget.pegawai.gd! == "-") ? "" : widget.pegawai.gd!) +
-                        widget.pegawai.nama! +
+                        widget.pegawai.nama! +' '+
                         widget.pegawai.gb!,
                     style: TextStyle(fontSize: 16, color: Colors.white),
                     maxLines: 2,

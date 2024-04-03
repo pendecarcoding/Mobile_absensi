@@ -71,6 +71,7 @@ class Data {
   String? status;
   String? createdAt;
   String? updatedAt;
+  String? bypass;
 
   Data(
       {required this.idUser,
@@ -94,7 +95,9 @@ class Data {
       required this.image,
       required this.status,
       required this.createdAt,
-      required this.updatedAt});
+      required this.updatedAt,
+      required this.bypass
+      });
 
   Data.fromJson(Map<String, dynamic> json) {
     idUser = json['id_user'];
@@ -119,6 +122,7 @@ class Data {
     status = json['status'];
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
+    bypass = json['bypass'];
   }
 
   Map<String, dynamic> toJson() {
@@ -145,6 +149,7 @@ class Data {
     data['status'] = this.status;
     data['created_at'] = this.createdAt;
     data['updated_at'] = this.updatedAt;
+    data['bypass'] = this.bypass;
     return data;
   }
 }

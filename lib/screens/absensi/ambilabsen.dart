@@ -47,6 +47,7 @@ class ambilabsen extends StatefulWidget {
 
 class _ambilabsen extends State<ambilabsen> {
   StreamSubscription<GeofenceStatus>? geofenceStatusStream;
+   bool isLoading = false;
   String geofenceStatus = '';
   double distance = 0.0;
   Timer? timer;
@@ -174,7 +175,7 @@ class _ambilabsen extends State<ambilabsen> {
   final Completer<GoogleMapController> _controller =
       Completer<GoogleMapController>();
 
-  void getdistance(Kantor kantor) {
+  void getdistance(Kantor kantor, Data pegawai) {
     try {
       getUserCurrentLocation().then((value) async {
         var totalDistance = await calculateDistance(
@@ -187,18 +188,26 @@ class _ambilabsen extends State<ambilabsen> {
           currentLat = value.latitude.toString();
           currentLong = value.longitude.toString();
           distance = totalDistance;
-          if (distance < 0.5) {
-            geofenceStatus = "VALID";
-          } else {
-            geofenceStatus = "INVALID";
+          if(pegawai.bypass == 'Y'){
+              geofenceStatus = "VALID";
+          }else{
+            if (distance < 0.5) {
+              geofenceStatus = "VALID";
+            } else {
+              geofenceStatus = "INVALID";
+            }
           }
-          checkStatus();
+          
+          checkStatus(pegawai);
         });
       });
     } catch (e) {}
   }
 
-  void checkStatus() {
+  void checkStatus(Data pegawai) {
+    if(pegawai.bypass == 'Y'){
+              geofenceStatus = "VALID";
+    }else{
     if (geofenceStatusStream == null) {
       geofenceStatusStream = EasyGeofencing.getGeofenceStream()!.listen(
         (GeofenceStatus status) {
@@ -227,6 +236,7 @@ class _ambilabsen extends State<ambilabsen> {
           });
         },
       );
+    }
     }
   }
 
@@ -257,11 +267,13 @@ class _ambilabsen extends State<ambilabsen> {
   void openCamera(BuildContext context) async {
     final ImagePicker _picker = ImagePicker();
     XFile? image = await _picker.pickImage(source: ImageSource.camera);
-    final File? imagefile = File(image!.path);
+    if (image != null) {
+    final File? imagefile = File(image.path);
     setState(() async {
       dynamic id = await SessionManager().get("id");
       final bytes = io.File(image.path).readAsBytesSync();
       String img64 = base64Encode(bytes);
+      
       uploadAbsen(
         id.toString(),
         currentLat,
@@ -270,6 +282,53 @@ class _ambilabsen extends State<ambilabsen> {
         img64,
         jenis,
       );
+
+      handleClick();
+    });
+    }else {
+    // Show a message indicating that no image was selected
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("Gambar Tidak tersedia"),
+          content: Text("Pastikan untuk melakukan swafoto."),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text("OK"),
+            ),
+          ],
+        );
+      }
+    );
+    }
+  }
+
+  void handleClick() {
+    setState(() {
+      isLoading = true;
+    });
+
+    // Simulate an asynchronous operation
+    Future.delayed(Duration(seconds: 3), () {
+      setState(() {
+        isLoading = false;
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            backgroundColor: (absensiModel.data.data!.success! ==
+                    true)
+                ? Color.fromARGB(255, 3, 155, 150)
+                : Color.fromARGB(255, 232, 15, 15),
+            content: Text(absensiModel.data.data!.message!.toString()),
+          ),
+        );
+        if (absensiModel.data.data!.success == true) {
+          _showSuccessSnackbar();
+        }
+      });
     });
   }
 
@@ -289,16 +348,25 @@ class _ambilabsen extends State<ambilabsen> {
       'H',
       "data:image/png;base64," + img64,
       jenis,
-    )
-        .then((success) {
-      if (success) {
-        print("MOGA MASUK");
-        _showSuccessSnackbar();
-      } else {
-        print("Operation failed");
-        // Handle failure
-      }
-    });
+    );
+    //     .then((success) {
+    //   if (absensiModel.data.data!.success == true) {
+    //     print("MOGA MASUK");
+    //     _showSuccessSnackbar();
+    //   } else {
+    //     _showFailedSnackbar(absensiModel.data.data!.message);
+    //     // Handle failure
+    //   }
+    // });
+  }
+
+
+  void _showFailedSnackbar(msg) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(msg),
+      ),
+    );
   }
 
   void _showSuccessSnackbar() {
@@ -326,15 +394,21 @@ class _ambilabsen extends State<ambilabsen> {
     );
   }
 
-  void _dialogTake(BuildContext context) {
+  void _dialogTake(BuildContext context, Data pegawai) {
+    String getContent() {
+    if (pegawai.bypass == 'Y') {
+      return 'Saat ini anda mendapat Hak Istimewa dalam Absensi. anda dapat melakukan absensi di manasaja melalui fitur ini';
+    } else {
+      return 'Tetap pada posisi anda saat ini untuk melakukan proses absensi. jangan berpindah keluar batas dari lingkaran radius. saran terbaik saat ini anda tetap di lokasi VALID, Pindah kelokasi INVALID akan membuat proses absensi ditolak';
+
+    }
+  }
     showDialog<void>(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
           title: const Text('PERHATIAN !!!'),
-          content: const Text(
-            'Tetap pada posisi anda saat ini untuk melakukan proses absensi. jangan berpindah keluar batas dari lingkaran radius. saran terbaik saat ini anda tetap di lokasi VALID, Pindah kelokasi INVALID akan membuat proses absensi ditolak',
-          ),
+          content: Text(getContent()),
           actions: <Widget>[
             TextButton(
               style: TextButton.styleFrom(
@@ -469,7 +543,7 @@ class _ambilabsen extends State<ambilabsen> {
     //   Duration(seconds: 30),
     //   (Timer t) => getdistance(widget.kantor),
     // );
-    getdistance(kantor);
+    getdistance(kantor,pegawai);
     double latitudekantor = double.parse(kantor.latitude.toString());
     double longitudekantor = double.parse(kantor.longitude.toString());
     String namaunitkerja = kantor.namaunitkerja.toString();
@@ -591,23 +665,28 @@ class _ambilabsen extends State<ambilabsen> {
                 ),
                 Material(
                   child: Center(
-                    child: Ink(
-                      decoration: const ShapeDecoration(
-                        color: Color.fromARGB(255, 242, 242, 242),
-                        shape: CircleBorder(),
-                      ),
-                      child: IconButton(
-                        icon: Icon(Icons.fingerprint),
-                        color: Color.fromARGB(255, 7, 7, 7),
-                        onPressed: () {
-                          if (geofenceStatus == 'VALID') {
-                            _dialogTake(context);
-                          } else {
-                            _dialogNotOnRadius(context);
-                          }
-                        },
-                      ),
-                    ),
+                 child: Ink(
+  decoration: const ShapeDecoration(
+    color: Color.fromARGB(255, 242, 242, 242),
+    shape: CircleBorder(),
+  ),
+  child: isLoading
+    ? CircularProgressIndicator(
+        valueColor: AlwaysStoppedAnimation<Color>(Color.fromARGB(255, 2, 162, 76)),
+      )
+    : IconButton(
+        icon: Icon(Icons.fingerprint),
+        color: Color.fromARGB(255, 7, 7, 7),
+        onPressed: () {
+          if (geofenceStatus == 'VALID') {
+            _dialogTake(context, pegawai);
+          } else {
+            _dialogNotOnRadius(context);
+          }
+        },
+      ),
+),
+
                   ),
                 ),
               ],
@@ -622,19 +701,19 @@ class _ambilabsen extends State<ambilabsen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back),
-          color: Colors.white,
-          onPressed: () {
-            // Any action you want to perform before going back to the parent activity
+        // leading: IconButton(
+        //   icon: Icon(Icons.arrow_back),
+        //   color: Colors.white,
+        //   // onPressed: () {
+        //   //   // Any action you want to perform before going back to the parent activity
 
-            Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(
-                    builder: (BuildContext context) =>
-                        home())); // This will finish the child activity and return to the parent activity
-          },
-        ),
+        //   //   Navigator.pushReplacement(
+        //   //       context,
+        //   //       MaterialPageRoute(
+        //   //           builder: (BuildContext context) =>
+        //   //               home())); // This will finish the child activity and return to the parent activity
+        //   // },
+        // ),
         title: Text("Ambil Absen"),
         backgroundColor: LightColors.primary,
         foregroundColor: Colors.white,
